@@ -1,0 +1,24 @@
+# Kelbari — Netlify settings.
+# Static site: no build step. Only the `public/` folder is published, so the
+# README, this file and tooling are never served.
+
+[build]
+  publish = "public"
+
+# Security headers on every page.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Fonts never change under the same file name, so cache them for a year.
+[[headers]]
+  for = "/assets/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# The www → kelbari.net redirect is handled by Netlify's domain settings
+# (primary domain), not by a rule here.

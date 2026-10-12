@@ -1,0 +1,66 @@
+# Decap CMS — lets the founders add and remove portfolio projects at /admin.
+# Signing in uses GitHub (via Netlify's OAuth provider). Every save commits to
+# `main` in kelbari-agency/kelbari, which triggers a production deploy.
+
+backend:
+  name: github
+  repo: kelbari-agency/kelbari
+  branch: main
+  commit_messages:
+    create: "Add work: {{slug}}"
+    update: "Update work: {{slug}}"
+    delete: "Remove work: {{slug}}"
+    uploadMedia: "Upload image: {{path}}"
+    deleteMedia: "Remove image: {{path}}"
+
+site_url: https://kelbari.net
+display_url: https://kelbari.net
+logo_url: https://kelbari.net/assets/brand/icon-512.png
+
+publish_mode: simple
+locale: en
+
+# Images are saved in the repo and served from /images/uploads/.
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: work
+    label: Selected work
+    files:
+      - name: projects
+        label: Projects
+        file: public/data/projects.json
+        format: json
+        fields:
+          - label: Projects
+            name: projects
+            widget: list
+            label_singular: project
+            summary: "{{fields.title}}"
+            hint: "Add a project, or delete one with the trash icon. Click Publish when you're done."
+            fields:
+              - { label: Title, name: title, widget: string }
+              - label: Category
+                name: category
+                widget: select
+                options:
+                  - Web development
+                  - Social media marketing
+                  - Graphic design
+                  - Full brand system
+              - label: Description
+                name: description
+                widget: text
+                hint: "Two or three sentences: what you made, and what changed for the client."
+              - label: Cover image
+                name: image
+                widget: image
+                required: false
+                hint: "Landscape works best (16:10). Shown at the top of the card."
+              - label: Link
+                name: link
+                widget: string
+                required: false
+                hint: "Optional. A full address starting with https://"
+                pattern: ["^https?://.+", "Start the address with https://"]

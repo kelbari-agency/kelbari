@@ -1,0 +1,14 @@
+# Never commit secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Local tooling
+node_modules/
+.netlify/
+.DS_Store
+Thumbs.db
+*.log
+__pycache__/
+.claude/
