@@ -167,8 +167,10 @@
         ctx.strokeStyle = `rgba(${AQUA},${al})`;
         ctx.beginPath(); ctx.moveTo(pointer.x, pointer.y); ctx.lineTo(n.x, n.y); ctx.stroke();
       }
-      ctx.fillStyle = `rgba(${AQUA},${0.9 * pointer.fade})`;
-      ctx.beginPath(); ctx.arc(pointer.x, pointer.y, 3, 0, 6.283); ctx.fill();
+      if (!document.documentElement.classList.contains('has-kcursor')) {
+        ctx.fillStyle = `rgba(${AQUA},${0.9 * pointer.fade})`;
+        ctx.beginPath(); ctx.arc(pointer.x, pointer.y, 3, 0, 6.283); ctx.fill();
+      }
     }
 
     // nodes

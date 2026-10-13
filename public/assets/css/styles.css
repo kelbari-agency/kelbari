@@ -586,6 +586,28 @@ a.hl-value:hover { color: var(--aqua); text-decoration-color: var(--aqua); }
   .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
+
+/* ---------- Custom cursor (Node K): see assets/js/cursor.js ---------- */
+html.has-kcursor, html.has-kcursor * { cursor: none; }
+html.has-kcursor input, html.has-kcursor textarea, html.has-kcursor [contenteditable="true"] { cursor: text; }
+.kcursor {
+  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 9999; overflow: visible;
+  opacity: 0; transition: opacity .2s;
+}
+.kcursor.is-visible { opacity: 1; }
+.kcursor.is-hidden { opacity: 0; }
+.kc-dot { fill: var(--deep); transition: fill .2s; }
+.kc-ring { fill: rgba(52, 211, 180, 0); stroke: var(--deep); stroke-width: 1.5; transition: fill .25s, stroke .2s, stroke-width .2s; }
+.kc-edge { stroke: var(--deep); stroke-width: 1.5; stroke-linecap: round; transition: stroke .2s; }
+.kcursor.is-hover .kc-ring { fill: rgba(52, 211, 180, .22); stroke: var(--teal); stroke-width: 2; }
+.kcursor.is-press .kc-ring { fill: rgba(52, 211, 180, .4); }
+/* on Deep sections: aqua node, light hub */
+.kcursor.is-dark .kc-dot { fill: var(--aqua); }
+.kcursor.is-dark .kc-ring { stroke: rgba(227, 247, 242, .85); }
+.kcursor.is-dark .kc-edge { stroke: var(--aqua); }
+.kcursor.is-dark.is-hover .kc-ring { fill: rgba(52, 211, 180, .2); stroke: var(--aqua); }
+
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
