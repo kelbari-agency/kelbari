@@ -29,7 +29,7 @@
   const CLEAR = 12; // clear space = one node diameter = 12 grid units
 
   let W = 0, H = 0, dpr = 1;
-  let nodes = [], seeds = [], keepOut = null, link = 140;
+  let nodes = [], seeds = [], keepOut = null, link = 140, soft = 1;
   let t0 = performance.now();
   let raf = 0, inView = true;
   const pointer = { x: 0, y: 0, active: false, fade: 0, timer: 0 };
@@ -74,7 +74,8 @@
 
     const narrow = W < 700;
     link = narrow ? 104 : clamp(W / 9, 110, 160);
-    const count = Math.round(clamp((W * H) / (narrow ? 15000 : 21000), 22, 62));
+    const count = Math.round(clamp((W * H) / (narrow ? 21000 : 21000), narrow ? 16 : 22, 62));
+    soft = narrow ? 0.7 : 1;
     const minGap = narrow ? 42 : 54;
     const rand = rng(11);
     const pts = [];
@@ -137,7 +138,7 @@
     for (const n of nodes) {
       if (n.g <= 0) continue;
       const near = Math.hypot(n.seed.x - n.x, n.seed.y - n.y);
-      const a = (n.g < 1 ? 0.34 : 0.2) * Math.min(1, n.g * 3) * clamp(1.15 - near / (link * 2.1), 0, 1);
+      const a = soft * (n.g < 1 ? 0.34 : 0.2) * Math.min(1, n.g * 3) * clamp(1.15 - near / (link * 2.1), 0, 1);
       if (a <= 0.01) continue;
       ctx.strokeStyle = `rgba(${AQUA},${a})`;
       ctx.beginPath(); ctx.moveTo(n.seed.x, n.seed.y); ctx.lineTo(n.x, n.y); ctx.stroke();
@@ -150,7 +151,7 @@
         const b = nodes[j]; if (b.g <= 0.2) continue;
         const d = Math.hypot(a.x - b.x, a.y - b.y);
         if (d > link) continue;
-        const al = (1 - d / link) * 0.3 * Math.min(a.g, b.g);
+        const al = soft * (1 - d / link) * 0.3 * Math.min(a.g, b.g);
         ctx.strokeStyle = `rgba(${AQUA},${al})`;
         ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
       }

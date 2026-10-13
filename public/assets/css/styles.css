@@ -222,7 +222,7 @@ section { padding: clamp(72px, 9vw, 120px) 0; }
 
 @media (max-width: 899px) {
   .hero-grid { grid-template-columns: 1fr; gap: 28px; }
-  .hero-mark { order: -1; justify-self: start; width: 120px; }
+  .hero-mark { order: -1; justify-self: start; width: clamp(96px, 22vw, 168px); }
   .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -265,10 +265,11 @@ section { padding: clamp(72px, 9vw, 120px) 0; }
   margin-top: clamp(64px, 8vw, 96px);
 }
 .pillar {
+  position: relative;
   background: var(--white);
   border-top: 3px solid var(--mist);
-  padding: clamp(26px, 3vw, 40px);
-  transition: border-color .4s;
+  padding: clamp(24px, 3vw, 40px);
+  transition: border-color .4s, opacity .5s var(--ease), transform .5s var(--ease), box-shadow .25s;
 }
 .pillar.is-linked { border-top-color: var(--deep); }
 .pillar h3 { margin-bottom: 14px; }
@@ -283,7 +284,7 @@ section { padding: clamp(72px, 9vw, 120px) 0; }
 
 @media (max-width: 899px) {
   .tree-hub { justify-content: flex-start; }
-  .pillars { grid-template-columns: 1fr; margin-top: 40px; padding-left: 44px; gap: 24px; }
+  .pillars { grid-template-columns: 1fr; margin-top: 36px; padding-left: 44px; gap: 20px; }
 }
 
 /* ---------- Process: a connected line with a travelling node ---------- */
@@ -321,9 +322,10 @@ section { padding: clamp(72px, 9vw, 120px) 0; }
 }
 .rail-fill { transition: transform .18s linear; }
 
-@media (max-width: 759px) {
-  .steps { grid-template-columns: 1fr; gap: 40px; padding-top: 0; padding-left: 44px; }
-  .step .dot { left: -44px; top: 6px; }
+@media (max-width: 899px) {
+  .steps { grid-template-columns: 1fr; gap: 44px; padding-top: 0; padding-left: 44px; }
+  .step .dot { left: -44px; top: 2px; }
+  .step p { max-width: 52ch; }
 }
 
 /* ---------- Work ---------- */
@@ -458,8 +460,135 @@ a.hl-value:hover { color: var(--aqua); text-decoration-color: var(--aqua); }
 .page-simple p { margin-top: 20px; max-width: 46ch; color: var(--mint); }
 .page-simple .btn { margin-top: 32px; }
 
+/* ==========================================================================
+   Motion and polish
+   Everything here is progressive: without JS (.js absent) or with reduced
+   motion, content shows in its final state.
+   ========================================================================== */
+
+/* ---------- Header state ---------- */
+.site-header { transition: box-shadow .25s, background-color .25s; }
+.site-header.is-scrolled { box-shadow: 0 6px 24px rgba(7, 50, 47, .08); background: rgba(242, 246, 245, .96); }
+.nav a[aria-current="true"]:not(.btn) { color: var(--deep); border-bottom-color: var(--aqua); }
+
+/* ---------- Buttons: a small lift on hover ---------- */
+.btn { transition: background-color .18s, color .18s, box-shadow .18s, transform .18s var(--ease); }
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+/* ---------- Hero entrance: copy follows the K as it draws ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy > *, .facts { opacity: 0; transform: translateY(14px); animation: rise .7s var(--ease) forwards; }
+  .hero-copy > :nth-child(1) { animation-delay: .15s; }
+  .hero-copy > :nth-child(2) { animation-delay: .25s; }
+  .hero-copy > :nth-child(3) { animation-delay: .4s; }
+  .hero-copy > :nth-child(4) { animation-delay: .5s; }
+  .hero-copy > :nth-child(5) { animation-delay: .6s; }
+  .facts { animation-delay: .8s; }
+  .hero .rule { transform-origin: left center; }
+}
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+/* ---------- Generic reveal ---------- */
+.js [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.js [data-reveal].is-in { opacity: 1; transform: none; }
+.js .contact-grid [data-reveal]:nth-child(2) { transition-delay: .12s; }
+.js .two [data-reveal]:nth-child(2) { transition-delay: .12s; }
+
+/* ---------- Services: pillars light up when their branch connects ---------- */
+.js .pillar { opacity: .4; transform: translateY(14px); }
+.js .pillar.is-linked { opacity: 1; transform: none; }
+.pillar-icon { display: inline-flex; width: 48px; height: 48px; margin-bottom: 18px; padding: 4px; background: var(--paper); border-radius: 2px; }
+.pillar-icon svg { width: 40px; height: 40px; }
+.pillar-icon svg circle[fill="#34D3B4"] { transform-box: fill-box; transform-origin: center; transition: transform .35s var(--ease); }
+.pillar.is-linked .pillar-icon svg circle[fill="#34D3B4"] { animation: node-pop .5s var(--ease) .1s both; }
+@media (hover: hover) {
+  .pillar.is-linked:hover { box-shadow: 0 18px 40px rgba(7, 50, 47, .1); transform: translateY(-4px); border-top-color: var(--teal); }
+  .pillar:hover .pillar-icon svg circle[fill="#34D3B4"] { transform: scale(1.25); }
+}
+@keyframes node-pop { 0% { transform: scale(0); } 70% { transform: scale(1.25); } 100% { transform: scale(1); } }
+.tree-lines .end { transform-box: fill-box; transform-origin: center; transition: fill .4s, transform .4s var(--ease); }
+.tree-lines .end.is-linked { transform: scale(1.15); }
+
+/* ---------- Process: steps brighten as the node arrives ---------- */
+.js .step { opacity: .45; transition: opacity .4s var(--ease); }
+.js .step.is-reached { opacity: 1; }
+.step.is-reached .dot { box-shadow: 0 0 0 6px rgba(52, 211, 180, .18); }
+
+/* ---------- Work: the empty state is visibly "in progress" ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .empty-art .e-line { animation: march 1.6s linear infinite; }
+  .empty-art .e-node { animation: wait 2.4s var(--ease) infinite; transform-box: fill-box; transform-origin: center; }
+  .empty-art .e-node:nth-of-type(2) { animation-delay: .4s; }
+  .empty-art .e-node:nth-of-type(3) { animation-delay: .8s; }
+}
+@keyframes march { to { stroke-dashoffset: -22; } }
+@keyframes wait { 0%, 60%, 100% { fill: var(--paper); stroke: var(--mist); transform: scale(1); } 30% { fill: var(--mint); stroke: var(--teal); transform: scale(1.12); } }
+
+/* ---------- About: founders with initials ---------- */
+.founder { display: flex; align-items: center; gap: 16px; }
+.avatar {
+  flex: none; display: inline-grid; place-items: center;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--ink); color: var(--white);
+  font-weight: 800; font-size: 17px; letter-spacing: -.01em;
+  box-shadow: 0 0 0 2px var(--aqua);
+}
+
+/* ---------- Contact: the branches pop in one by one ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .js .hubline .hl-item::before { transform: scale(0); transition: transform .45s var(--ease); }
+  .js .hubline.is-in .hl-item::before { transform: scale(1); }
+  .js .hubline .hl-item::after { transform: scaleY(0); transform-origin: top; transition: transform .5s var(--ease); }
+  .js .hubline.is-in .hl-item::after { transform: scaleY(1); }
+  .js .hubline.is-in .hl-item:nth-child(2)::before, .js .hubline.is-in .hl-item:nth-child(1)::after { transition-delay: .15s; }
+  .js .hubline.is-in .hl-item:nth-child(3)::before, .js .hubline.is-in .hl-item:nth-child(2)::after { transition-delay: .3s; }
+  .js .hubline.is-in .hl-item:nth-child(4)::before, .js .hubline.is-in .hl-item:nth-child(3)::after { transition-delay: .45s; }
+  .js .hubline.is-in .hl-item:nth-child(5)::before, .js .hubline.is-in .hl-item:nth-child(4)::after { transition-delay: .6s; }
+  .js .hubline.is-in .hl-item:nth-child(6)::before, .js .hubline.is-in .hl-item:nth-child(5)::after { transition-delay: .75s; }
+}
+
+/* ---------- Mobile menu slides down ---------- */
+@media (max-width: 859px) and (prefers-reduced-motion: no-preference) {
+  .nav.is-open { animation: menu-in .28s var(--ease); }
+  .nav.is-open a { animation: rise .35s var(--ease) both; }
+  .nav.is-open a:nth-child(2) { animation-delay: .03s; }
+  .nav.is-open a:nth-child(3) { animation-delay: .06s; }
+  .nav.is-open a:nth-child(4) { animation-delay: .09s; }
+  .nav.is-open a:nth-child(5) { animation-delay: .12s; }
+  .nav.is-open a:nth-child(6) { animation-delay: .15s; }
+}
+@keyframes menu-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+@media (max-width: 859px) { .nav { box-shadow: 0 18px 30px rgba(7, 50, 47, .12); } }
+
+/* ---------- Floating WhatsApp arrives after the hero ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .wa { animation: wa-in .5s var(--ease) 1.4s both; }
+}
+@keyframes wa-in { from { opacity: 0; transform: translateY(16px) scale(.9); } to { opacity: 1; transform: none; } }
+
+/* ---------- Small phones ---------- */
+@media (max-width: 380px) {
+  .display { font-size: 38px; }
+  .facts { gap: 20px 18px; }
+  .facts strong { font-size: 24px; }
+  .btn { padding: 14px 18px; }
+  .pillars, .steps { padding-left: 36px; }
+  .step .dot { left: -36px; }
+  .empty { padding: 24px; }
+}
+
+/* ---------- Tablets: give the hero mark room beside the tagline ---------- */
+@media (min-width: 600px) and (max-width: 899px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr) auto; }
+  .hero-mark { order: 0; grid-column: 2; grid-row: 1; align-self: start; justify-self: end; }
+  .hero-copy { grid-column: 1; grid-row: 1; }
+  .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
+  .js [data-reveal], .js .pillar, .js .step { opacity: 1 !important; transform: none !important; }
 }

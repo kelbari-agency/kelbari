@@ -1,4 +1,4 @@
-/* Kelbari — page behaviour: menu, scroll-linked tree + process line, portfolio data, contact form. */
+/* Kelbari — page behaviour: menu, scroll-linked tree + process line, reveals, nav state, portfolio data, contact form. */
 (() => {
   'use strict';
 
@@ -37,6 +37,10 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
 
+  /* The "draw line": a fixed height in the viewport. Scroll-linked lines grow
+     until they reach it, so what is drawn always lines up with what you see. */
+  const drawLine = () => window.innerHeight * (window.innerWidth < 900 ? 0.7 : 0.75);
+
   /* ---------- Services: hub with three branches, drawn as you scroll ---------- */
   (() => {
     const tree = $('[data-tree]');
@@ -45,8 +49,15 @@
     const hubDot = $('[data-hub-dot]', tree);
     const cards = $$('.pillar', tree);
     const wide = window.matchMedia('(min-width: 900px)');
-    let paths = [], ends = [];
     const R = 16;
+    let geo = null;
+
+    const mk = (tag, attrs) => {
+      const n = document.createElementNS(SVG_NS, tag);
+      Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v));
+      svg.appendChild(n);
+      return n;
+    };
 
     function build() {
       const tr = tree.getBoundingClientRect();
@@ -54,62 +65,74 @@
       svg.setAttribute('height', tr.height);
       svg.setAttribute('viewBox', `0 0 ${tr.width} ${tr.height}`);
       svg.replaceChildren();
-      paths = []; ends = [];
       const hr = hubDot.getBoundingClientRect();
       const hx = hr.left + hr.width / 2 - tr.left;
-      const hy = hr.top + hr.height / 2 - tr.top;
-      const y0 = hy + hr.height / 2 - 2;
+      const y0 = hr.top + hr.height - tr.top - 2;
 
-      cards.forEach((card) => {
-        const cr = card.getBoundingClientRect();
-        let d, ex, ey;
-        if (wide.matches) {
-          ex = cr.left + cr.width / 2 - tr.left;
-          ey = cr.top - tr.top;
-          const bus = ey - 40;
-          if (Math.abs(ex - hx) < 2) {
-            d = `M${hx} ${y0} V${ey}`;
-          } else {
-            const s = ex > hx ? 1 : -1;
-            d = `M${hx} ${y0} V${bus - R} Q${hx} ${bus} ${hx + s * R} ${bus} H${ex - s * R} Q${ex} ${bus} ${ex} ${bus + R} V${ey}`;
+      if (wide.matches) {
+        // One trunk down from the hub, a bus, and a drop into each card.
+        const ends = cards.map((c) => {
+          const cr = c.getBoundingClientRect();
+          return { x: cr.left + cr.width / 2 - tr.left, y: cr.top - tr.top };
+        });
+        const bus = ends[0].y - 40;
+        const paths = ends.map((e) => {
+          let d;
+          if (Math.abs(e.x - hx) < 2) d = `M${hx} ${y0} V${e.y}`;
+          else {
+            const s = e.x > hx ? 1 : -1;
+            d = `M${hx} ${y0} V${bus - R} Q${hx} ${bus} ${hx + s * R} ${bus} H${e.x - s * R} Q${e.x} ${bus} ${e.x} ${bus + R} V${e.y}`;
           }
-        } else {
-          ex = cr.left - tr.left;
-          ey = cr.top - tr.top + 34;
-          d = `M${hx} ${y0} V${ey - R} Q${hx} ${ey} ${hx + R} ${ey} H${ex}`;
-        }
-        const p = document.createElementNS(SVG_NS, 'path');
-        p.setAttribute('class', 'branch');
-        p.setAttribute('d', d);
-        p.setAttribute('pathLength', '1');
-        p.style.strokeDasharray = '1 2';
-        svg.appendChild(p);
-        const c = document.createElementNS(SVG_NS, 'circle');
-        c.setAttribute('class', 'end');
-        c.setAttribute('cx', ex);
-        c.setAttribute('cy', ey);
-        c.setAttribute('r', '7');
-        svg.appendChild(c);
-        paths.push(p); ends.push(c);
-      });
+          const p = mk('path', { class: 'branch', d, pathLength: '1' });
+          p.style.strokeDasharray = '1 2';
+          return p;
+        });
+        const nodes = ends.map((e) => mk('circle', { class: 'end', cx: e.x, cy: e.y, r: '7' }));
+        geo = { mode: 'wide', y0, yEnd: ends[0].y, paths, nodes };
+      } else {
+        // One continuous spine down the left, with a short branch into each card.
+        const rows = cards.map((c) => {
+          const cr = c.getBoundingClientRect();
+          return { y: cr.top - tr.top + 46, x: cr.left - tr.left };
+        });
+        const last = rows[rows.length - 1].y;
+        const spine = mk('path', { class: 'branch', d: `M${hx} ${y0} V${last}`, pathLength: '1' });
+        spine.style.strokeDasharray = '1 2';
+        const stubs = rows.map((r) => {
+          const p = mk('path', { class: 'branch', d: `M${hx} ${r.y} H${r.x}`, pathLength: '1' });
+          p.style.strokeDasharray = '1 2';
+          return p;
+        });
+        const nodes = rows.map((r) => mk('circle', { class: 'end', cx: hx, cy: r.y, r: '7' }));
+        geo = { mode: 'narrow', y0, last, rows, spine, stubs, nodes };
+      }
       update();
     }
 
+    function setLinked(i, on) {
+      geo.nodes[i].classList.toggle('is-linked', on);
+      cards[i].classList.toggle('is-linked', on);
+    }
+
     function update() {
-      if (!paths.length) return;
-      const r = tree.getBoundingClientRect();
-      const vh = window.innerHeight;
-      let p;
-      if (reduceQuery.matches) p = 1;
-      else if (wide.matches) p = clamp((vh * 0.88 - r.top) / (Math.min(r.height, vh * 0.9) * 0.8), 0, 1);
-      else p = clamp((vh * 0.82 - r.top) / r.height, 0, 1);
-      paths.forEach((path, i) => {
-        const q = wide.matches ? clamp((p - 0.12 * i) / 0.64, 0, 1) : clamp((p - 0.06) * 1.25 - i * 0.18, 0, 1);
-        path.style.strokeDashoffset = String(1 - q);
-        const linked = q >= 0.999;
-        ends[i].classList.toggle('is-linked', linked);
-        cards[i].classList.toggle('is-linked', linked);
-      });
+      if (!geo) return;
+      const reduce = reduceQuery.matches;
+      const tip = drawLine() - tree.getBoundingClientRect().top; // draw line in tree coordinates
+      if (geo.mode === 'wide') {
+        const p = reduce ? 1 : clamp((tip - geo.y0) / (geo.yEnd - geo.y0), 0, 1);
+        geo.paths.forEach((path, i) => {
+          path.style.strokeDashoffset = String(1 - p);
+          setLinked(i, p >= 0.999);
+        });
+      } else {
+        const p = reduce ? 1 : clamp((tip - geo.y0) / (geo.last - geo.y0), 0, 1);
+        geo.spine.style.strokeDashoffset = String(1 - p);
+        geo.rows.forEach((r, i) => {
+          const q = reduce ? 1 : clamp((tip - r.y) / 36, 0, 1);
+          geo.stubs[i].style.strokeDashoffset = String(1 - q);
+          setLinked(i, q >= 0.999);
+        });
+      }
     }
 
     scrollTasks.push(update);
@@ -140,26 +163,23 @@
       const a = pts[0], b = pts[pts.length - 1];
       horizontal = Math.abs(b.x - a.x) >= Math.abs(b.y - a.y);
       const w = 2;
-      if (horizontal) {
-        Object.assign(track.style, { left: a.x + 'px', top: a.y - w / 2 + 'px', width: b.x - a.x + 'px', height: w + 'px' });
-        Object.assign(fill.style, { left: a.x + 'px', top: a.y - w / 2 + 'px', width: b.x - a.x + 'px', height: w + 'px' });
-      } else {
-        Object.assign(track.style, { left: a.x - w / 2 + 'px', top: a.y + 'px', width: w + 'px', height: b.y - a.y + 'px' });
-        Object.assign(fill.style, { left: a.x - w / 2 + 'px', top: a.y + 'px', width: w + 'px', height: b.y - a.y + 'px' });
-      }
+      const box = horizontal
+        ? { left: a.x + 'px', top: a.y - w / 2 + 'px', width: b.x - a.x + 'px', height: w + 'px' }
+        : { left: a.x - w / 2 + 'px', top: a.y + 'px', width: w + 'px', height: b.y - a.y + 'px' };
+      Object.assign(track.style, box);
+      Object.assign(fill.style, box);
       fill.dataset.orient = horizontal ? 'h' : 'v';
       update();
     }
 
     function update() {
       if (!pts.length) return;
-      const r = wrap.getBoundingClientRect();
-      const vh = window.innerHeight;
+      const wr = wrap.getBoundingClientRect();
+      const a = pts[0], b = pts[pts.length - 1];
       let p;
       if (reduceQuery.matches) p = 1;
-      else if (horizontal) p = clamp((vh * 0.82 - r.top) / (vh * 0.5), 0, 1);
-      else p = clamp((vh * 0.6 - r.top) / (r.height * 0.9), 0, 1);
-      const a = pts[0], b = pts[pts.length - 1];
+      else if (horizontal) p = clamp((drawLine() - wr.top) / (window.innerHeight * 0.45), 0, 1);
+      else p = clamp((drawLine() - wr.top - a.y) / (b.y - a.y), 0, 1);
       const x = a.x + (b.x - a.x) * p, y = a.y + (b.y - a.y) * p;
       trav.style.transform = `translate(${x}px, ${y}px)`;
       fill.style.transform = horizontal ? `scaleX(${p})` : `scaleY(${p})`;
@@ -171,6 +191,57 @@
     reduceQuery.addEventListener('change', update);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
     measure();
+  })();
+
+  /* ---------- Reveal on scroll ---------- */
+  (() => {
+    const items = $$('[data-reveal]');
+    if (!items.length) return;
+    if (reduceQuery.matches || !('IntersectionObserver' in window)) { items.forEach((el) => el.classList.add('is-in')); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
+    items.forEach((el) => io.observe(el));
+  })();
+
+  /* ---------- Hero numbers count up once ---------- */
+  (() => {
+    const facts = $('[data-facts]');
+    if (!facts || reduceQuery.matches || !('IntersectionObserver' in window)) return;
+    const nums = $$('[data-count]', facts);
+    nums.forEach((n) => { n.textContent = '0' + (n.dataset.suffix || ''); });
+    const run = () => {
+      const t0 = performance.now(), dur = 1100;
+      const tick = (now) => {
+        const t = clamp((now - t0) / dur, 0, 1), e = 1 - Math.pow(1 - t, 3);
+        nums.forEach((n) => { n.textContent = Math.round(Number(n.dataset.count) * e) + (n.dataset.suffix || ''); });
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { io.disconnect(); setTimeout(run, 250); } }, { threshold: 0.4 });
+    io.observe(facts);
+  })();
+
+  /* ---------- Header: shadow once scrolled, current section in the nav ---------- */
+  (() => {
+    const header = $('.site-header');
+    if (header) {
+      const set = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+      scrollTasks.push(set); set();
+    }
+    const links = $$('[data-nav] a[href^="#"]:not(.btn)');
+    if (!links.length || !('IntersectionObserver' in window)) return;
+    const byId = new Map(links.map((a) => [a.getAttribute('href').slice(1), a]));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        links.forEach((a) => a.removeAttribute('aria-current'));
+        const a = byId.get(en.target.id);
+        if (a) a.setAttribute('aria-current', 'true');
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    ['top', ...byId.keys()].forEach((id) => { const s = document.getElementById(id); if (s) io.observe(s); });
   })();
 
   /* ---------- Selected work: reads /data/projects.json ---------- */
