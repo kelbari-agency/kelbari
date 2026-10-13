@@ -268,9 +268,7 @@
         <p>Send the brief below or message us directly on WhatsApp. Most enquiries get a reply the same working day.</p>
       </div>
       <div class="contact-grid">
-        <form name="project-brief" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="bot-field" data-brief-form novalidate>
-          <input type="hidden" name="form-name" value="project-brief">
-          <p class="hp" aria-hidden="true"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+        <form data-brief-form novalidate>
           <div class="pair">
             <div class="field">
               <label for="f-name">Your name</label>
@@ -278,25 +276,18 @@
               <p class="err" id="e-name">Add your name so we know who to reply to.</p>
             </div>
             <div class="field">
-              <label for="f-email">Email <span class="opt">(needed to send by email)</span></label>
-              <input id="f-email" name="email" type="email" autocomplete="email" placeholder="jane@acme.com" aria-describedby="e-email">
-              <p class="err" id="e-email">Enter a valid email address to send by email.</p>
-            </div>
-          </div>
-          <div class="pair">
-            <div class="field">
               <label for="f-company">Company <span class="opt">(optional)</span></label>
               <input id="f-company" name="company" type="text" autocomplete="organization" placeholder="Acme Ltd">
             </div>
-            <div class="field">
-              <label for="f-service">Service needed</label>
-              <select id="f-service" name="service">
-                <option>Web development</option>
-                <option>Social media marketing</option>
-                <option>Graphic design</option>
-                <option>All three</option>
-              </select>
-            </div>
+          </div>
+          <div class="field">
+            <label for="f-service">Service needed</label>
+            <select id="f-service" name="service">
+              <option>Web development</option>
+              <option>Social media marketing</option>
+              <option>Graphic design</option>
+              <option>All three</option>
+            </select>
           </div>
           <div class="field">
             <label for="f-brief">Project brief</label>
@@ -305,9 +296,9 @@
           </div>
           <div class="form-actions">
             <button class="btn btn-aqua" type="button" data-send-wa>Send via WhatsApp</button>
-            <button class="btn btn-line" type="submit" data-send-email>Send by email</button>
+            <button class="btn btn-line" type="button" data-send-email>Send by email</button>
           </div>
-          <p class="form-note mono">WhatsApp opens with your brief pre-filled. Email goes straight to our inbox.</p>
+          <p class="form-note mono">Both open your app with the brief pre-filled. Review it, then press send.</p>
           <p class="form-status" role="status" aria-live="polite" data-form-status></p>
         </form>
 

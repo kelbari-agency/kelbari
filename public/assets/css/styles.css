@@ -377,7 +377,7 @@ section { padding: clamp(72px, 9vw, 120px) 0; }
 .field { margin-top: 24px; }
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; margin-top: 24px; }
 .pair .field { margin-top: 0; }
-.hp + .pair { margin-top: 0; }
+form > .pair:first-child { margin-top: 0; }
 .field label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; line-height: 20px; color: var(--mint); }
 .field .opt { font-weight: 400; color: var(--mist); }
 .field input, .field select, .field textarea {
@@ -405,9 +405,8 @@ section { padding: clamp(72px, 9vw, 120px) 0; }
 .form-note { margin-top: 16px; color: var(--mist); max-width: 52ch; }
 .form-status { margin-top: 20px; min-height: 28px; font-weight: 600; }
 .form-status:empty { display: none; }
-.form-status[data-state="ok"] { padding-left: 12px; border-left: 3px solid var(--success); }
 .form-status[data-state="error"] { padding-left: 12px; border-left: 3px solid var(--error); }
-.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form-status a { color: var(--white); text-underline-offset: 4px; }
 
 .hubline { position: relative; }
 .hl-item { position: relative; padding: 0 0 30px 52px; }
@@ -451,7 +450,7 @@ a.hl-value:hover { color: var(--aqua); text-decoration-color: var(--aqua); }
   .wa { width: 56px; height: 56px; padding: 0; justify-content: center; border-radius: 50%; }
 }
 
-/* ---------- Simple pages (thanks, 404) ---------- */
+/* ---------- Simple pages (404) ---------- */
 .page-simple { min-height: 100vh; display: flex; flex-direction: column; }
 .page-simple main { flex: 1; background: var(--deep); color: var(--white); display: flex; align-items: center; }
 .page-simple main .wrap { padding-top: 72px; padding-bottom: 72px; }

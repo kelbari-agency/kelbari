@@ -15,7 +15,6 @@ Plain HTML, CSS and JavaScript. No build step, no framework. Self-hosted fonts (
 │   └── og-template.html      Template for the social preview image (1200 × 630)
 └── public/                   Everything in here is published. Nothing outside it is.
     ├── index.html            The single-page site
-    ├── thanks/index.html     Shown after a no-JavaScript form submission
     ├── 404.html              Not-found page
     ├── admin/                Decap CMS: index.html (loader) and config.yml (fields)
     ├── data/projects.json    The portfolio. Edited through /admin, or by hand
@@ -37,7 +36,7 @@ python3 -m http.server 8000 -d public
 # open http://localhost:8000
 ```
 
-The contact form's "Send by email" button needs Netlify to receive the submission, so it only works on a deployed site. WhatsApp, the portfolio and everything else work locally.
+Everything works locally, including the contact form: both buttons open the visitor's own app (WhatsApp or their mail app) with the brief pre-filled, and nothing is sent until they press send there.
 
 ## Add or remove portfolio projects
 
@@ -74,14 +73,12 @@ Edit `public/data/projects.json`. An empty portfolio is `{ "projects": [] }`. Ea
 
 ## How deploys work
 
-- Every push or merge to `main` deploys to production at https://kelbari.net.
+- Every push or merge to `main` deploys to production at https://kelbari.net. Work on a branch and open a pull request to get a preview first.
 - Every pull request gets its own deploy preview URL, posted on the pull request.
 - `netlify.toml` publishes the `public/` folder with no build command.
 - Netlify DNS manages `kelbari.net`. `www.kelbari.net` redirects to the apex domain. Do not add or remove DNS records for email or anything else without checking with the owners first.
 
 ## One-time setup in Netlify (owner only)
-
-**Contact form email notifications.** The form is detected automatically on deploy and appears under **Forms → project-brief**. Add an email notification there (Forms → Form notifications) so submissions reach `kelbariofficial@gmail.com`.
 
 **CMS sign-in (GitHub OAuth).** Decap signs people in with GitHub through Netlify's OAuth provider:
 
@@ -101,7 +98,7 @@ From the Kelbari Brand Guidelines v1.0:
 - Aqua is an accent: never text on white or on teal. Teal on white is for text 24px and up only (this site uses teal for graphics and focus rings, not small text).
 - Manrope 800 for display and headings, 600 for labels and buttons, 400 for body. JetBrains Mono for small technical details.
 - The Node K mark is always the supplied vector, never redrawn, stretched, rotated, recoloured or given a shadow. Nothing enters its clear space (12 grid units).
-- Success and error colours appear only in form states.
+- The error colour appears only in form states.
 
 The favicon set follows the guide (32 px and 16 px at 56% symbol on Deep, with the 16 px using the small-size variant). To regenerate it and the social preview image:
 

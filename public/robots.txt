@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
-Disallow: /thanks/
 
 Sitemap: https://kelbari.net/sitemap.xml

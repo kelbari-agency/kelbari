@@ -228,62 +228,58 @@
       .catch(() => { /* keep the "coming soon" state */ });
   })();
 
-  /* ---------- Contact form: WhatsApp brief or Netlify Forms email ---------- */
+  /* ---------- Contact form: open WhatsApp or the mail app with the brief pre-filled ---------- */
   (() => {
     const form = $('[data-brief-form]');
     if (!form) return;
     const WA = '923019233246';
+    const MAIL = 'kelbariofficial@gmail.com';
     const status = $('[data-form-status]', form);
     const f = {
-      name: $('#f-name', form), email: $('#f-email', form), company: $('#f-company', form),
+      name: $('#f-name', form), company: $('#f-company', form),
       service: $('#f-service', form), brief: $('#f-brief', form),
     };
-    const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 
-    const say = (msg, state) => {
-      status.textContent = msg || '';
-      if (state) status.dataset.state = state; else delete status.dataset.state;
-    };
     const flag = (input, bad) => { if (bad) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid'); return bad; };
-    const check = (needEmail) => {
-      const bad = [
-        flag(f.name, !f.name.value.trim()),
-        flag(f.email, needEmail ? !emailOk(f.email.value.trim()) : false),
-        flag(f.brief, !f.brief.value.trim()),
-      ];
-      const first = [f.name, f.email, f.brief].find((_, i) => bad[i]);
-      if (first) { first.focus(); return false; }
+    const check = () => {
+      const badName = flag(f.name, !f.name.value.trim());
+      const badBrief = flag(f.brief, !f.brief.value.trim());
+      if (badName) { f.name.focus(); return false; }
+      if (badBrief) { f.brief.focus(); return false; }
       return true;
     };
     Object.values(f).forEach((input) => input.addEventListener('input', () => input.removeAttribute('aria-invalid')));
 
-    $('[data-send-wa]', form).addEventListener('click', () => {
-      say('');
-      if (!check(false)) return;
-      const lines = ['Hi Kelbari,', '', 'Name: ' + f.name.value.trim()];
+    const details = () => {
+      const lines = ['Name: ' + f.name.value.trim()];
       if (f.company.value.trim()) lines.push('Company: ' + f.company.value.trim());
       lines.push('Service: ' + f.service.value, '', 'Brief:', f.brief.value.trim());
-      window.open(`https://wa.me/${WA}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener');
+      return lines;
+    };
+
+    form.addEventListener('submit', (e) => e.preventDefault());
+
+    $('[data-send-wa]', form).addEventListener('click', () => {
+      status.textContent = '';
+      if (!check()) return;
+      const text = ['Hi Kelbari,', ''].concat(details()).join('\n');
+      window.open(`https://wa.me/${WA}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
     });
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      say('');
-      if (!check(true)) return;
-      const btn = $('[data-send-email]', form);
-      btn.disabled = true;
-      say('Sending…');
-      try {
-        const body = new URLSearchParams(new FormData(form)).toString();
-        const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        form.reset();
-        say('Sent. We’ll reply by email within 24 hours.', 'ok');
-      } catch (_) {
-        say('That didn’t send. Try WhatsApp, or email kelbariofficial@gmail.com directly.', 'error');
-      } finally {
-        btn.disabled = false;
-      }
+    $('[data-send-email]', form).addEventListener('click', () => {
+      if (!check()) return;
+      const who = f.company.value.trim() || f.name.value.trim();
+      const subject = `Project brief: ${f.service.value} — ${who}`;
+      const body = ['Hi Kelbari,', ''].concat(details()).join('\r\n');
+      window.location.href = `mailto:${MAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      // If no mail app is set up, nothing visible happens, so leave a fallback.
+      status.textContent = '';
+      const note = document.createElement('span');
+      note.append('Your mail app should open with the brief filled in. If it didn’t, email ');
+      const a = document.createElement('a');
+      a.href = `mailto:${MAIL}`; a.textContent = MAIL;
+      note.append(a, ' directly.');
+      status.append(note);
     });
   })();
 })();
