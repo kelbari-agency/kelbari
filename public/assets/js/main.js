@@ -19,7 +19,9 @@
     if (!btn || !nav) return;
     const set = (open) => {
       btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
       nav.classList.toggle('is-open', open);
+      document.documentElement.classList.toggle('menu-open', open);
     };
     btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
     nav.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });
