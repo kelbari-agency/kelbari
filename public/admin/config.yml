@@ -46,7 +46,7 @@ collections:
                 widget: select
                 options:
                   - Web development
-                  - Social media marketing
+                  - Digital marketing
                   - Graphic design
                   - Full brand system
               - label: Description

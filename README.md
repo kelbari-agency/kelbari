@@ -1,6 +1,6 @@
 # Kelbari website
 
-The marketing site for [Kelbari](https://kelbari.net): web development, social media marketing and graphic design, sold as one connected system.
+The marketing site for [Kelbari](https://kelbari.net): web development, digital marketing (including social media marketing) and graphic design, sold as one connected system.
 
 Plain HTML, CSS and JavaScript. No build step, no framework. Self-hosted fonts (Manrope and JetBrains Mono).
 
@@ -69,7 +69,7 @@ Edit `public/data/projects.json`. An empty portfolio is `{ "projects": [] }`. Ea
 }
 ```
 
-`category` is one of: Web development, Social media marketing, Graphic design, Full brand system. `image` and `link` are optional.
+`category` is one of: Web development, Digital marketing, Graphic design, Full brand system. `image` and `link` are optional.
 
 ## How deploys work
 
