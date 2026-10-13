@@ -600,13 +600,19 @@ html.has-kcursor input, html.has-kcursor textarea, html.has-kcursor [contentedit
 .kc-dot { fill: var(--deep); transition: fill .2s; }
 .kc-ring { fill: rgba(52, 211, 180, 0); stroke: var(--deep); stroke-width: 1.5; transition: fill .25s, stroke .2s, stroke-width .2s; }
 .kc-edge { stroke: var(--deep); stroke-width: 1.5; stroke-linecap: round; transition: stroke .2s; }
-.kcursor.is-hover .kc-ring { fill: rgba(52, 211, 180, .22); stroke: var(--teal); stroke-width: 2; }
-.kcursor.is-press .kc-ring { fill: rgba(52, 211, 180, .4); }
+.kcursor.is-hover .kc-ring { fill: rgba(52, 211, 180, .2); stroke: var(--teal); stroke-width: 2; }
+.kcursor.is-snap .kc-ring { fill: rgba(52, 211, 180, .1); stroke: var(--teal); stroke-width: 2; }
+.kcursor.is-press .kc-ring { fill: rgba(52, 211, 180, .3); }
+.kc-pulse { fill: none; stroke: var(--teal); stroke-width: 1.5; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; animation: kc-signal .6s cubic-bezier(.2, .7, .2, 1) forwards; }
+@keyframes kc-signal { from { transform: scale(.15); opacity: .9; } to { transform: scale(1); opacity: 0; } }
 /* on Deep sections: aqua node, light hub */
 .kcursor.is-dark .kc-dot { fill: var(--aqua); }
 .kcursor.is-dark .kc-ring { stroke: rgba(227, 247, 242, .85); }
 .kcursor.is-dark .kc-edge { stroke: var(--aqua); }
-.kcursor.is-dark.is-hover .kc-ring { fill: rgba(52, 211, 180, .2); stroke: var(--aqua); }
+.kcursor.is-dark.is-hover .kc-ring, .kcursor.is-dark.is-snap .kc-ring { stroke: var(--aqua); }
+.kcursor.is-dark .kc-pulse { stroke: var(--aqua); }
+/* the magnetic pull is applied with the `translate` property; ease it back on leave */
+html.has-kcursor .btn, html.has-kcursor .wa { transition: background-color .18s, color .18s, box-shadow .18s, transform .18s var(--ease), translate .25s var(--ease); }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
