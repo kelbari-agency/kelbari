@@ -77,4 +77,19 @@ collections:
                 widget: string
                 required: false
                 hint: "Optional. The live site, starting with https://"
+              - label: Page address
+                name: slug
+                widget: string
+                required: false
+                pattern: ['^[a-z0-9-]*$', "Lowercase letters, numbers and dashes only"]
+                hint: "Needed for a gallery. Short name for the project's address, e.g. fancourt opens kelbari.net/#work/fancourt"
+              - label: Gallery
+                name: gallery
+                widget: list
+                required: false
+                hint: "Optional. Full-width images shown in order when someone opens the project on this site. Use either a gallery or a link."
+                fields:
+                  - { label: Image, name: image, widget: image }
+                  - { label: Width (px), name: width, widget: number, required: false, value_type: int }
+                  - { label: Height (px), name: height, widget: number, required: false, value_type: int }
                 pattern: ["^https?://.+", "Start the address with https://"]

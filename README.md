@@ -72,6 +72,13 @@ Edit `public/data/projects.json`. An empty portfolio is `{ "projects": [] }`. Ea
 
 `category` is one of: Web development, Digital marketing, Graphic design, Full brand system. `image` and `link` are optional.
 
+Every card is clickable and has one button:
+
+- **View site**: the project has a `link`. Opens the live site in a new tab.
+- **View project**: the project has a `slug` and a `gallery` (a list of full-width images, each with `image`, `width` and `height`). Opens a viewer on this page at `kelbari.net/#work/<slug>`, so the work is shown here without sending visitors elsewhere. Gallery images live in `public/images/work/<slug>/`.
+
+The filter buttons above the cards are built from the categories in use.
+
 ## How deploys work
 
 - Every push or merge to `main` deploys to production at https://kelbari.net. Work on a branch and open a pull request to get a preview first.

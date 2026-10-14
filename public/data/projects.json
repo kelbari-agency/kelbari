@@ -93,7 +93,24 @@
         "JavaScript"
       ],
       "image": "/images/uploads/fancourt.jpg",
-      "link": "https://seeratali.netlify.app/"
+      "slug": "fancourt",
+      "gallery": [
+        {
+          "image": "/images/work/fancourt/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/fancourt/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/fancourt/03.webp",
+          "width": 1366,
+          "height": 546
+        }
+      ]
     },
     {
       "title": "MAIVA",
@@ -110,7 +127,54 @@
         "JavaScript"
       ],
       "image": "/images/uploads/maiva.jpg",
-      "link": "https://seeratali.netlify.app/"
+      "slug": "maiva",
+      "gallery": [
+        {
+          "image": "/images/work/maiva/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/03.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/04.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/05.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/06.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/07.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/08.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/09.webp",
+          "width": 1366,
+          "height": 1497
+        }
+      ]
     },
     {
       "title": "BabyResume",
@@ -124,7 +188,24 @@
         "Figma"
       ],
       "image": "/images/uploads/babyresume.jpg",
-      "link": "https://seeratali.netlify.app/"
+      "slug": "babyresume",
+      "gallery": [
+        {
+          "image": "/images/work/babyresume/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/babyresume/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/babyresume/03.webp",
+          "width": 1366,
+          "height": 546
+        }
+      ]
     },
     {
       "title": "PMHOA Pro",
@@ -138,7 +219,54 @@
         "PowerPoint"
       ],
       "image": "/images/uploads/pmhoa-pro.jpg",
-      "link": "https://seeratali.netlify.app/"
+      "slug": "pmhoa-pro",
+      "gallery": [
+        {
+          "image": "/images/work/pmhoa-pro/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/03.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/04.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/05.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/06.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/07.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/08.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/09.webp",
+          "width": 1366,
+          "height": 1498
+        }
+      ]
     },
     {
       "title": "Apartment Maid",
@@ -150,7 +278,19 @@
         "Support on branding and the logo"
       ],
       "image": "/images/uploads/apartment-maid.jpg",
-      "link": "https://seeratali.netlify.app/"
+      "slug": "apartment-maid",
+      "gallery": [
+        {
+          "image": "/images/work/apartment-maid/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/apartment-maid/02.webp",
+          "width": 1366,
+          "height": 930
+        }
+      ]
     },
     {
       "title": "Brighter Strides ABA",
@@ -161,7 +301,34 @@
         "Event graphics and community posts"
       ],
       "image": "/images/uploads/brighter-strides.jpg",
-      "link": "https://seeratali.netlify.app/"
+      "slug": "brighter-strides",
+      "gallery": [
+        {
+          "image": "/images/work/brighter-strides/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/brighter-strides/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/brighter-strides/03.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/brighter-strides/04.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/brighter-strides/05.webp",
+          "width": 1366,
+          "height": 985
+        }
+      ]
     },
     {
       "title": "QuizPur",
@@ -172,7 +339,24 @@
         "Website and UI improvements"
       ],
       "image": "/images/uploads/quizpur.jpg",
-      "link": "https://seeratali.netlify.app/"
+      "slug": "quizpur",
+      "gallery": [
+        {
+          "image": "/images/work/quizpur/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/quizpur/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/quizpur/03.webp",
+          "width": 1366,
+          "height": 385
+        }
+      ]
     },
     {
       "title": "Qayas Design Studio",
@@ -184,7 +368,34 @@
         "UI mockups"
       ],
       "image": "/images/uploads/qayas-design-studio.jpg",
-      "link": "https://seeratali.netlify.app/"
+      "slug": "qayas-design-studio",
+      "gallery": [
+        {
+          "image": "/images/work/qayas-design-studio/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/qayas-design-studio/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/qayas-design-studio/03.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/qayas-design-studio/04.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/qayas-design-studio/05.webp",
+          "width": 1366,
+          "height": 1220
+        }
+      ]
     },
     {
       "title": "Tiernan Travels",
@@ -195,7 +406,34 @@
         "Social media graphic sets for destinations and offers"
       ],
       "image": "/images/uploads/tiernan-travels.jpg",
-      "link": "https://seeratali.netlify.app/"
+      "slug": "tiernan-travels",
+      "gallery": [
+        {
+          "image": "/images/work/tiernan-travels/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/tiernan-travels/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/tiernan-travels/03.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/tiernan-travels/04.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/tiernan-travels/05.webp",
+          "width": 1366,
+          "height": 985
+        }
+      ]
     }
   ]
 }

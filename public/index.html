@@ -360,6 +360,27 @@
 
 </main>
 
+<dialog class="viewer" data-viewer aria-labelledby="viewer-title">
+  <div class="viewer-bar">
+    <div class="viewer-id"><span class="cat" data-v-cat></span><strong id="viewer-title" data-v-title></strong></div>
+    <button class="viewer-close" type="button" data-v-close aria-label="Close project"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  </div>
+  <div class="viewer-scroll" data-v-scroll>
+    <header class="viewer-intro">
+      <h2 data-v-h></h2>
+      <p class="viewer-desc" data-v-desc></p>
+      <ul class="phigh" data-v-high></ul>
+      <div class="pstack" data-v-stack></div>
+    </header>
+    <div class="viewer-gallery" data-v-gallery></div>
+    <footer class="viewer-foot">
+      <a class="btn btn-ink" href="#work" data-v-next></a>
+      <a class="btn btn-cobalt" href="#contact" data-v-contact>Start a project</a>
+    </footer>
+  </div>
+</dialog>
+
+
 <footer class="site-footer on-dark">
   <div class="wrap">
     <div class="f-top">

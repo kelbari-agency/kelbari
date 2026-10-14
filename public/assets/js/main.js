@@ -168,12 +168,108 @@
       return n;
     };
 
+
+    /* Project viewer: opens a project's full gallery on this page at #work/<slug>. */
+    function setupViewer(list, safeUrl, el) {
+      const dlg = $('[data-viewer]');
+      if (!dlg || !list.length || typeof dlg.showModal !== 'function') return;
+      const q = (s) => dlg.querySelector(s);
+      const bySlug = new Map(list.map((p) => [p.slug, p]));
+      let current = null, pushed = false;
+
+      function fill(p) {
+        q('[data-v-cat]').textContent = p.category || '';
+        q('[data-v-title]').textContent = p.title;
+        q('[data-v-h]').textContent = p.title;
+        q('[data-v-desc]').textContent = p.description || '';
+        const high = q('[data-v-high]'); high.replaceChildren();
+        (p.highlights || []).filter(Boolean).forEach((h) => high.appendChild(el('li', '', typeof h === 'string' ? h : h.item)));
+        high.hidden = !high.children.length;
+        const stack = q('[data-v-stack]'); stack.replaceChildren();
+        const tools = (p.built_with || []).filter(Boolean);
+        if (tools.length) {
+          stack.appendChild(el('span', 'pstack-label', 'Built with'));
+          tools.forEach((t) => stack.appendChild(el('span', 'ptag', typeof t === 'string' ? t : t.tool)));
+        }
+        stack.hidden = !tools.length;
+        const gal = q('[data-v-gallery]'); gal.replaceChildren();
+        p.gallery.forEach((g, i) => {
+          const img = el('img');
+          img.src = safeUrl(g.image);
+          if (g.width && g.height) { img.width = g.width; img.height = g.height; }
+          img.alt = i === 0 ? `${p.title}: project showcase` : '';
+          img.loading = i < 2 ? 'eager' : 'lazy';
+          img.decoding = 'async';
+          gal.appendChild(img);
+        });
+        const next = list[(list.indexOf(p) + 1) % list.length];
+        const nx = q('[data-v-next]');
+        nx.href = `#work/${next.slug}`;
+        nx.replaceChildren(el('span', '', `Next: ${next.title}`));
+        nx.insertAdjacentHTML('beforeend', '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+        q('[data-v-scroll]').scrollTop = 0;
+      }
+
+      function open(p) {
+        current = p; fill(p);
+        if (!dlg.open) {
+          dlg.showModal();
+          document.documentElement.classList.add('viewer-open');
+        }
+        q('[data-v-close]').focus({ preventScroll: true });
+      }
+      function shut() {
+        if (!dlg.open) return;
+        dlg.close();
+      }
+      dlg.addEventListener('close', () => {
+        document.documentElement.classList.remove('viewer-open');
+        const was = current; current = null;
+        if (/^#work\//.test(location.hash)) {
+          if (pushed) { pushed = false; history.back(); }
+          else history.replaceState(null, '', '#work');
+        }
+        // return focus to the card the visitor came from
+        if (was) {
+          const a = document.querySelector(`.project a[href="#work/${was.slug}"]`);
+          if (a) setTimeout(() => a.focus({ preventScroll: true }), 60); // after history.back() settles
+        }
+      });
+      q('[data-v-close]').addEventListener('click', shut);
+      // click on the dimmed backdrop closes
+      dlg.addEventListener('click', (e) => { if (e.target === dlg) shut(); });
+      // "Start a project" closes the viewer, then scrolls to the form
+      q('[data-v-contact]').addEventListener('click', (e) => {
+        e.preventDefault(); pushed = false; dlg.close();
+        history.replaceState(null, '', '#contact');
+        const c = document.getElementById('contact'); if (c) c.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      });
+      // Next project swaps in place without stacking history entries
+      q('[data-v-next]').addEventListener('click', (e) => {
+        const p = bySlug.get(e.currentTarget.getAttribute('href').slice(6));
+        if (!p) return;
+        e.preventDefault();
+        history.replaceState(null, '', `#work/${p.slug}`);
+        open(p);
+      });
+
+      function route(fromClick) {
+        const m = location.hash.match(/^#work\/([a-z0-9-]+)$/);
+        const p = m && bySlug.get(m[1]);
+        if (p) { if (fromClick) pushed = true; open(p); }
+        else if (dlg.open) { pushed = false; dlg.close(); }
+      }
+      window.addEventListener('hashchange', () => route(true));
+      route(false);
+    }
+
     fetch('/data/projects.json', { cache: 'no-cache' })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('no data'))))
       .then((data) => {
         const list = (Array.isArray(data) ? data : data && data.projects) || [];
         const items = list.filter((p) => p && p.title);
         if (!items.length) return;
+        const viewerItems = [];
         items.forEach((p) => {
           const card = el('article', 'project');
           const thumb = el('div', 'thumb');
@@ -202,16 +298,27 @@
             stack.forEach((t) => wrap.appendChild(el('span', 'ptag', typeof t === 'string' ? t : t.tool)));
             body.appendChild(wrap);
           }
+          const gallery = (p.gallery || []).filter((g) => g && g.image && safeUrl(g.image));
+          const slug = /^[a-z0-9-]+$/.test(p.slug || '') ? p.slug : '';
           const href = p.link ? safeUrl(p.link) : '';
-          if (href) {
-            // One real link (the button). Its ::after stretches over the card, so the whole card is clickable.
-            const live = !/seeratali\.netlify\.app/.test(href);
-            const label = live ? 'View site' : 'View project';
+          const arrow = '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+          const plus = '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+          // One real link (the button). Its ::after stretches over the card, so the whole card is clickable.
+          if (gallery.length && slug) {
+            const a = el('a', 'btn btn-cobalt pbtn');
+            a.href = `#work/${slug}`;
+            a.setAttribute('aria-label', `View project: ${p.title}`);
+            a.append(el('span', '', 'View project'));
+            a.insertAdjacentHTML('beforeend', plus);
+            body.appendChild(a);
+            card.classList.add('is-link');
+            viewerItems.push({ ...p, slug, gallery });
+          } else if (href) {
             const a = el('a', 'btn btn-cobalt pbtn');
             a.href = href; a.target = '_blank'; a.rel = 'noopener';
-            a.setAttribute('aria-label', `${label}: ${p.title} (opens in a new tab)`);
-            a.append(el('span', '', label));
-            a.insertAdjacentHTML('beforeend', '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+            a.setAttribute('aria-label', `View site: ${p.title} (opens in a new tab)`);
+            a.append(el('span', '', 'View site'));
+            a.insertAdjacentHTML('beforeend', arrow);
             body.appendChild(a);
             card.classList.add('is-link');
           }
@@ -243,6 +350,7 @@
         }
         grid.hidden = false;
         empty.hidden = true;
+        setupViewer(viewerItems, safeUrl, el);
       })
       .catch(() => { /* keep the "coming soon" state */ });
   })();

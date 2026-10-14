@@ -5,10 +5,6 @@
 [build]
   publish = "public"
 
-# TEMPORARY, this branch only: copy the portfolio media in for inspection.
-[context.deploy-preview]
-  command = "node tools/probe-portfolio.mjs"
-
 # Security headers on every page.
 [[headers]]
   for = "/*"
