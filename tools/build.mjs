@@ -207,7 +207,7 @@ ${related.length ? `<section class="svc-section" id="work-list" aria-labelledby=
 </div></section>
 ${ctaBand()}`;
   const jsonld = { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'Service', '@id': `${SITE}${path}#service`, name: s.name, serviceType: s.name, description: s.description, url: `${SITE}${path}`, provider: { '@type': 'Organization', ...ORG, name: 'Kelbari', url: `${SITE}/` }, areaServed: 'Worldwide',
+    { '@type': 'Service', '@id': `${SITE}${path}#service`, name: s.name, serviceType: s.name, description: s.description, url: `${SITE}${path}`, provider: { '@type': 'Organization', ...ORG, name: 'Kelbari', url: `${SITE}/` }, areaServed: [{ '@type': 'City', name: 'Bahawalpur' }, { '@type': 'Country', name: 'Pakistan' }, 'Worldwide'],
       hasOfferCatalog: { '@type': 'OfferCatalog', name: s.name, itemListElement: s.items.map((it) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: it.name, description: it.text } })) } },
     { '@type': 'FAQPage', mainEntity: s.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
     crumbLd(trail),
