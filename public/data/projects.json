@@ -104,11 +104,6 @@
           "image": "/images/work/fancourt/02.webp",
           "width": 1366,
           "height": 1400
-        },
-        {
-          "image": "/images/work/fancourt/03.webp",
-          "width": 1366,
-          "height": 546
         }
       ]
     },
@@ -172,7 +167,7 @@
         {
           "image": "/images/work/maiva/09.webp",
           "width": 1366,
-          "height": 1497
+          "height": 930
         }
       ]
     },
@@ -199,11 +194,6 @@
           "image": "/images/work/babyresume/02.webp",
           "width": 1366,
           "height": 1400
-        },
-        {
-          "image": "/images/work/babyresume/03.webp",
-          "width": 1366,
-          "height": 546
         }
       ]
     },
@@ -264,7 +254,7 @@
         {
           "image": "/images/work/pmhoa-pro/09.webp",
           "width": 1366,
-          "height": 1498
+          "height": 930
         }
       ]
     },
@@ -288,7 +278,7 @@
         {
           "image": "/images/work/apartment-maid/02.webp",
           "width": 1366,
-          "height": 930
+          "height": 477
         }
       ]
     },
@@ -326,7 +316,7 @@
         {
           "image": "/images/work/brighter-strides/05.webp",
           "width": 1366,
-          "height": 985
+          "height": 545
         }
       ]
     },
@@ -350,11 +340,6 @@
           "image": "/images/work/quizpur/02.webp",
           "width": 1366,
           "height": 1400
-        },
-        {
-          "image": "/images/work/quizpur/03.webp",
-          "width": 1366,
-          "height": 385
         }
       ]
     },
@@ -393,7 +378,7 @@
         {
           "image": "/images/work/qayas-design-studio/05.webp",
           "width": 1366,
-          "height": 1220
+          "height": 771
         }
       ]
     },
@@ -431,7 +416,7 @@
         {
           "image": "/images/work/tiernan-travels/05.webp",
           "width": 1366,
-          "height": 985
+          "height": 545
         }
       ]
     }
