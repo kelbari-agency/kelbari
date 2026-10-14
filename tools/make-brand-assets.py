@@ -4,10 +4,10 @@
 Run from the repo root:   python3 tools/make-brand-assets.py
 Needs: Pillow and Playwright with Chromium (pip install pillow playwright).
 
-Sizes follow the Kelbari Brand Guidelines, section 05:
-  favicon 32 / 16 px  - symbol 56%, Kelbari Deep, 16 px uses the small-size variant
-  iOS app icon        - symbol 52%, Kelbari Deep, square art, no text
-  Android / manifest  - symbol 48%, Kelbari Deep, symbol inside the 66% safe circle
+Sizes follow the original Kelbari brand guide (section 05); colours follow the v2 palette:
+  favicon 32 / 16 px  - symbol 56%, Midnight, 16 px uses the small-size variant
+  iOS app icon        - symbol 52%, Midnight, square art, no text
+  Android / manifest  - symbol 48%, Midnight, symbol inside the 66% safe circle
 The symbol is never redrawn: the full mark uses the exact 64-unit geometry from the site.
 """
 import io
@@ -20,7 +20,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 BRAND = ROOT / "public" / "assets" / "brand"
 BRAND.mkdir(parents=True, exist_ok=True)
 
-DEEP, AQUA, WHITE = "#07322F", "#34D3B4", "#FFFFFF"
+DEEP, AQUA, WHITE = "#12133B", "#8B88FF", "#FFFFFF"  # Midnight, Electric, White
 
 FULL = (
     f'<g stroke="{WHITE}" stroke-width="4" stroke-linecap="round">'
@@ -91,10 +91,10 @@ def main():
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">{FULL}</svg>\n'
     )
     dark = (
-        '<g stroke="#07322F" stroke-width="4" stroke-linecap="round"><path d="M14 12V52"/><path d="M14 32L48 12"/><path d="M14 32L48 52"/></g>'
-        '<circle cx="14" cy="12" r="6" fill="#07322F"/><circle cx="14" cy="52" r="6" fill="#07322F"/>'
-        '<circle cx="48" cy="12" r="6" fill="#34D3B4"/><circle cx="48" cy="52" r="6" fill="#34D3B4"/>'
-        '<circle cx="14" cy="32" r="5" fill="#F2F6F5" stroke="#07322F" stroke-width="3"/>'
+        '<g stroke="#12133B" stroke-width="4" stroke-linecap="round"><path d="M14 12V52"/><path d="M14 32L48 12"/><path d="M14 32L48 52"/></g>'
+        '<circle cx="14" cy="12" r="6" fill="#12133B"/><circle cx="14" cy="52" r="6" fill="#12133B"/>'
+        '<circle cx="48" cy="12" r="6" fill="#3B36F4"/><circle cx="48" cy="52" r="6" fill="#3B36F4"/>'
+        '<circle cx="14" cy="32" r="5" fill="#F8F8FC" stroke="#12133B" stroke-width="3"/>'
     )
     (BRAND / "kelbari-symbol.svg").write_text(
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">{dark}</svg>\n'

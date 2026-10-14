@@ -4,7 +4,7 @@
    - Over buttons and links the ring snaps around the element as an outline that
      matches its shape, and buttons drift slightly toward the pointer (magnetic).
    - A click sends a small signal pulse out from the node.
-   - Colours follow the brand: Deep on light sections, Aqua and light on Deep.
+   - Colours follow the surface: Midnight and Cobalt on light, Electric and white on dark.
    Mouse/trackpad only. Off on touch and with reduced motion (the system cursor
    stays). Hidden over text fields so the normal text cursor shows. */
 (() => {
@@ -25,11 +25,13 @@
   svg.append(pulses, edge, ring, dot);
 
   const R_REST = 15, R_HOVER = 22, R_PRESS = 10, DOT = 4, PAD = 7, MAGNET = 0.2, MAGNET_MAX = 8;
-  const SNAP = '.btn, .nav a, .wa, a.hl-value, .brand, .menu-btn, .project .more, .site-footer a';
+  const SNAP = '.btn, .nav > a, .wa, a.ch, .brand, .menu-btn, .project, .f-col a, .f-up, .f-brand';
   const INTERACTIVE = 'a, button, select, summary, label, [role="button"], [tabindex]:not([tabindex="-1"])';
   const TEXT = 'input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]), textarea, [contenteditable="true"]';
   const MAGNETIC = '.btn, .wa';
-  const DARK = '.on-deep, .site-footer, .wa';
+  // light/dark is decided by the nearest surface, so a white card inside a dark section reads as light
+  const SURFACE = '.on-dark, .form-card, .stat-haze, .stat-signal, .wa';
+  const isDark = (t) => { const z = t && t.closest(SURFACE); return !!z && z.matches('.on-dark, .wa'); };
 
   const p = { x: -100, y: -100 };                       // pointer = node
   const c = { x: -100, y: -100, w: 30, h: 30, rx: 15 };  // ring, eased
@@ -94,7 +96,7 @@
     const t = e.target instanceof Element ? e.target : null;
     const inText = !!(t && t.closest(TEXT));
     svg.classList.toggle('is-hidden', inText);
-    svg.classList.toggle('is-dark', !!(t && t.closest(DARK)));
+    svg.classList.toggle('is-dark', isDark(t));
 
     const nextSnap = !inText && t ? t.closest(SNAP) : null;
     if (nextSnap !== snapEl) { release(); snapEl = nextSnap; }

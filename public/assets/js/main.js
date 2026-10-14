@@ -1,4 +1,4 @@
-/* Kelbari — page behaviour: menu, scroll-linked tree + process line, reveals, nav state, portfolio data, contact form. */
+/* Kelbari — page behaviour: menu, services spine, stacking process cards, reveals, header and nav state, portfolio data, contact form. */
 (() => {
   'use strict';
 
@@ -6,8 +6,7 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const SVG_NS = 'http://www.w3.org/2000/svg';
-
+  
   /* ---------- Year ---------- */
   const yr = $('[data-year]');
   if (yr) yr.textContent = String(new Date().getFullYear());
@@ -28,7 +27,7 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') { set(false); btn.focus(); }
     });
-    window.matchMedia('(min-width: 860px)').addEventListener('change', (m) => { if (m.matches) set(false); });
+    window.matchMedia('(min-width: 900px)').addEventListener('change', (m) => { if (m.matches) set(false); });
   })();
 
   /* ---------- Scroll scheduler (one rAF for all scroll-linked bits) ---------- */
@@ -39,160 +38,54 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
 
-  /* The "draw line": a fixed height in the viewport. Scroll-linked lines grow
-     until they reach it, so what is drawn always lines up with what you see. */
-  const drawLine = () => window.innerHeight * (window.innerWidth < 900 ? 0.7 : 0.75);
+  /* The "draw line": a fixed height in the viewport. Scroll-linked pieces fill
+     up to it, so what is drawn always lines up with what you see. */
+  const drawLine = () => window.innerHeight * (window.innerWidth < 900 ? 0.7 : 0.72);
 
-  /* ---------- Services: hub with three branches, drawn as you scroll ---------- */
+  /* ---------- Services: the spine fills and each pillar connects as it is reached ---------- */
   (() => {
-    const tree = $('[data-tree]');
-    if (!tree) return;
-    const svg = $('.tree-lines', tree);
-    const hubDot = $('[data-hub-dot]', tree);
-    const cards = $$('.pillar', tree);
-    const wide = window.matchMedia('(min-width: 900px)');
-    const R = 16;
-    let geo = null;
-
-    const mk = (tag, attrs) => {
-      const n = document.createElementNS(SVG_NS, tag);
-      Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v));
-      svg.appendChild(n);
-      return n;
-    };
-
-    function build() {
-      const tr = tree.getBoundingClientRect();
-      svg.setAttribute('width', tr.width);
-      svg.setAttribute('height', tr.height);
-      svg.setAttribute('viewBox', `0 0 ${tr.width} ${tr.height}`);
-      svg.replaceChildren();
-      const hr = hubDot.getBoundingClientRect();
-      const hx = hr.left + hr.width / 2 - tr.left;
-      const y0 = hr.top + hr.height - tr.top - 2;
-
-      if (wide.matches) {
-        // One trunk down from the hub, a bus, and a drop into each card.
-        const ends = cards.map((c) => {
-          const cr = c.getBoundingClientRect();
-          return { x: cr.left + cr.width / 2 - tr.left, y: cr.top - tr.top };
-        });
-        const bus = ends[0].y - 40;
-        const paths = ends.map((e) => {
-          let d;
-          if (Math.abs(e.x - hx) < 2) d = `M${hx} ${y0} V${e.y}`;
-          else {
-            const s = e.x > hx ? 1 : -1;
-            d = `M${hx} ${y0} V${bus - R} Q${hx} ${bus} ${hx + s * R} ${bus} H${e.x - s * R} Q${e.x} ${bus} ${e.x} ${bus + R} V${e.y}`;
-          }
-          const p = mk('path', { class: 'branch', d, pathLength: '1' });
-          p.style.strokeDasharray = '1 2';
-          return p;
-        });
-        const nodes = ends.map((e) => mk('circle', { class: 'end', cx: e.x, cy: e.y, r: '7' }));
-        geo = { mode: 'wide', y0, yEnd: ends[0].y, paths, nodes };
-      } else {
-        // One continuous spine down the left, with a short branch into each card.
-        const rows = cards.map((c) => {
-          const cr = c.getBoundingClientRect();
-          return { y: cr.top - tr.top + 46, x: cr.left - tr.left };
-        });
-        const last = rows[rows.length - 1].y;
-        const spine = mk('path', { class: 'branch', d: `M${hx} ${y0} V${last}`, pathLength: '1' });
-        spine.style.strokeDasharray = '1 2';
-        const stubs = rows.map((r) => {
-          const p = mk('path', { class: 'branch', d: `M${hx} ${r.y} H${r.x}`, pathLength: '1' });
-          p.style.strokeDasharray = '1 2';
-          return p;
-        });
-        const nodes = rows.map((r) => mk('circle', { class: 'end', cx: hx, cy: r.y, r: '7' }));
-        geo = { mode: 'narrow', y0, last, rows, spine, stubs, nodes };
-      }
-      update();
-    }
-
-    function setLinked(i, on) {
-      geo.nodes[i].classList.toggle('is-linked', on);
-      cards[i].classList.toggle('is-linked', on);
-    }
+    const wrap = $('[data-pillars]');
+    if (!wrap) return;
+    const spine = $('.spine', wrap);
+    const fill = $('.spine-fill', spine);
+    const pillars = $$('.pillar', wrap);
+    const nodes = pillars.map((p) => $('.p-node', p));
 
     function update() {
-      if (!geo) return;
-      const reduce = reduceQuery.matches;
-      const tip = drawLine() - tree.getBoundingClientRect().top; // draw line in tree coordinates
-      if (geo.mode === 'wide') {
-        const p = reduce ? 1 : clamp((tip - geo.y0) / (geo.yEnd - geo.y0), 0, 1);
-        geo.paths.forEach((path, i) => {
-          path.style.strokeDashoffset = String(1 - p);
-          setLinked(i, p >= 0.999);
-        });
-      } else {
-        const p = reduce ? 1 : clamp((tip - geo.y0) / (geo.last - geo.y0), 0, 1);
-        geo.spine.style.strokeDashoffset = String(1 - p);
-        geo.rows.forEach((r, i) => {
-          const q = reduce ? 1 : clamp((tip - r.y) / 36, 0, 1);
-          geo.stubs[i].style.strokeDashoffset = String(1 - q);
-          setLinked(i, q >= 0.999);
-        });
-      }
+      const sr = spine.getBoundingClientRect();
+      const tip = drawLine();
+      const p = reduceQuery.matches ? 1 : clamp((tip - sr.top) / sr.height, 0, 1);
+      fill.style.transform = `scaleY(${p})`;
+      nodes.forEach((n, i) => {
+        const r = n.getBoundingClientRect();
+        pillars[i].classList.toggle('is-linked', reduceQuery.matches || r.top + r.height / 2 <= tip);
+      });
     }
-
     scrollTasks.push(update);
-    new ResizeObserver(build).observe(tree);
-    wide.addEventListener('change', build);
+    window.addEventListener('resize', update);
     reduceQuery.addEventListener('change', update);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
-    build();
+    update();
   })();
 
-  /* ---------- Process: a node travels the connected line ---------- */
+  /* ---------- Process: cards stack; the one underneath settles back as the next arrives ---------- */
   (() => {
-    const wrap = $('[data-steps]');
-    if (!wrap) return;
-    const steps = $$('.step', wrap);
-    const dots = steps.map((s) => $('.dot', s));
-    const track = $('.rail-track', wrap);
-    const fill = $('.rail-fill', wrap);
-    const trav = $('.traveler', wrap);
-    let pts = [], horizontal = true;
-
-    function measure() {
-      const wr = wrap.getBoundingClientRect();
-      pts = dots.map((d) => {
-        const r = d.getBoundingClientRect();
-        return { x: r.left + r.width / 2 - wr.left, y: r.top + r.height / 2 - wr.top };
-      });
-      const a = pts[0], b = pts[pts.length - 1];
-      horizontal = Math.abs(b.x - a.x) >= Math.abs(b.y - a.y);
-      const w = 2;
-      const box = horizontal
-        ? { left: a.x + 'px', top: a.y - w / 2 + 'px', width: b.x - a.x + 'px', height: w + 'px' }
-        : { left: a.x - w / 2 + 'px', top: a.y + 'px', width: w + 'px', height: b.y - a.y + 'px' };
-      Object.assign(track.style, box);
-      Object.assign(fill.style, box);
-      fill.dataset.orient = horizontal ? 'h' : 'v';
-      update();
-    }
-
+    const cards = $$('.stack .card');
+    if (cards.length < 2) return;
     function update() {
-      if (!pts.length) return;
-      const wr = wrap.getBoundingClientRect();
-      const a = pts[0], b = pts[pts.length - 1];
-      let p;
-      if (reduceQuery.matches) p = 1;
-      else if (horizontal) p = clamp((drawLine() - wr.top) / (window.innerHeight * 0.45), 0, 1);
-      else p = clamp((drawLine() - wr.top - a.y) / (b.y - a.y), 0, 1);
-      const x = a.x + (b.x - a.x) * p, y = a.y + (b.y - a.y) * p;
-      trav.style.transform = `translate(${x}px, ${y}px)`;
-      fill.style.transform = horizontal ? `scaleX(${p})` : `scaleY(${p})`;
-      steps.forEach((s, i) => s.classList.toggle('is-reached', p >= i / (steps.length - 1) - 0.001));
+      if (reduceQuery.matches) { cards.forEach((c) => { c.style.transform = ''; c.style.filter = ''; }); return; }
+      cards.forEach((card, i) => {
+        const next = cards[i + 1];
+        if (!next) return;
+        const a = card.getBoundingClientRect(), b = next.getBoundingClientRect();
+        const covered = clamp((a.bottom - b.top) / a.height, 0, 1);
+        card.style.transform = covered > 0 ? `scale(${(1 - covered * 0.06).toFixed(4)})` : '';
+        card.style.filter = covered > 0 ? `brightness(${(1 - covered * 0.18).toFixed(3)})` : '';
+      });
     }
-
     scrollTasks.push(update);
-    new ResizeObserver(measure).observe(wrap);
+    window.addEventListener('resize', update);
     reduceQuery.addEventListener('change', update);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
-    measure();
+    update();
   })();
 
   /* ---------- Reveal on scroll ---------- */
@@ -225,14 +118,24 @@
     io.observe(facts);
   })();
 
-  /* ---------- Header: shadow once scrolled, current section in the nav ---------- */
+  /* ---------- Header: glass firms up once scrolled, tucks away on the way down, returns on the way up ---------- */
   (() => {
-    const header = $('.site-header');
+    const header = $('[data-header]');
     if (header) {
-      const set = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+      let lastY = window.scrollY;
+      const set = () => {
+        const y = window.scrollY;
+        header.classList.toggle('is-scrolled', y > 8);
+        const menuOpen = document.documentElement.classList.contains('menu-open');
+        const focusInside = header.contains(document.activeElement);
+        if (!menuOpen && !focusInside && y > 320 && y > lastY + 4) header.classList.add('is-hidden');
+        else if (y < lastY - 4 || y <= 320 || menuOpen || focusInside) header.classList.remove('is-hidden');
+        lastY = y;
+      };
       scrollTasks.push(set); set();
+      header.addEventListener('focusin', () => header.classList.remove('is-hidden'));
     }
-    const links = $$('[data-nav] a[href^="#"]:not(.btn)');
+    const links = $$('[data-nav] > a[href^="#"]');
     if (!links.length || !('IntersectionObserver' in window)) return;
     const byId = new Map(links.map((a) => [a.getAttribute('href').slice(1), a]));
     const io = new IntersectionObserver((entries) => {

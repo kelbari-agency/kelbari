@@ -2,7 +2,7 @@
 
 The marketing site for [Kelbari](https://kelbari.net): web development, digital marketing (including social media marketing) and graphic design, sold as one connected system.
 
-Plain HTML, CSS and JavaScript. No build step, no framework. Self-hosted fonts (Manrope and JetBrains Mono).
+Plain HTML, CSS and JavaScript. No build step, no framework. Self-hosted fonts (Bricolage Grotesque, Geist and Geist Mono).
 
 ## Structure
 
@@ -21,9 +21,10 @@ Plain HTML, CSS and JavaScript. No build step, no framework. Self-hosted fonts (
     ├── images/uploads/       Project cover images uploaded through /admin
     ├── assets/
     │   ├── css/styles.css    All styles, built on the brand tokens
-    │   ├── js/hero.js        Hero: the K mark grows into a live network
-    │   ├── js/main.js        Menu, services tree, process line, portfolio, contact form
-    │   ├── fonts/            Manrope (variable) and JetBrains Mono, woff2
+    │   ├── js/hero.js        Hero tile: the K mark grows into a live network
+    │   ├── js/main.js        Menu, header, services spine, stacking process cards, portfolio, contact form
+    │   ├── js/cursor.js      Custom Node K cursor (mouse/trackpad only)
+    │   ├── fonts/            Bricolage Grotesque, Geist, Geist Mono (variable woff2) and licences
     │   ├── brand/            Favicons, app icons, plain SVG copies of the Node K mark
     │   └── og-image.png      Social preview image
     ├── favicon.ico  robots.txt  sitemap.xml  site.webmanifest
@@ -90,17 +91,18 @@ Edit `public/data/projects.json`. An empty portfolio is `{ "projects": [] }`. Ea
 
 Never put the client secret in this repository.
 
-## Brand rules the code follows
+## Design system (v2)
 
-From the Kelbari Brand Guidelines v1.0:
+The site uses a v2 visual system. It replaces the colours and fonts in the original brand guide PDF; the Node K mark's shape and the copy are unchanged.
 
-- Colours: Deep `#07322F`, Signal Teal `#0F9B85`, Aqua `#34D3B4`, Mint `#E3F7F2`, Ink `#0C1412`, Graphite `#4C5754`, Mist `#A9B4B1`, Paper `#F2F6F5`, White. Roughly Deep 60%, Paper 30%, Aqua 7%, Teal 3%.
-- Aqua is an accent: never text on white or on teal. Teal on white is for text 24px and up only (this site uses teal for graphics and focus rings, not small text).
-- Manrope 800 for display and headings, 600 for labels and buttons, 400 for body. JetBrains Mono for small technical details.
-- The Node K mark is always the supplied vector, never redrawn, stretched, rotated, recoloured or given a shadow. Nothing enters its clear space (12 grid units).
-- The error colour appears only in form states.
+- **Type:** Bricolage Grotesque (variable, optical size) for display and headings; Geist for body, labels and buttons; Geist Mono only for step numbers and small technical details. All self-hosted in `public/assets/fonts/` with their licences.
+- **Colours:** Midnight `#12133B` (dark surfaces, main text), Cobalt `#3B36F4` (primary actions on light surfaces), Electric `#8B88FF` (accent on dark surfaces), Signal `#FF5A7A` (rare highlight), Haze `#ECECFE`, Paper `#F8F8FC`, White, Slate `#555878` (secondary text), Line `#DADBEE`.
+- **Contrast rules:** never Cobalt on Midnight (use Electric there); never Signal as text on light surfaces; text on Signal is always Midnight. Every text pairing on the site meets WCAG AA.
+- **Logo colours:** on light, strokes and stem nodes Midnight, outer nodes Cobalt, hub filled Paper. On dark, strokes and stem nodes White, outer nodes Electric, hub filled Midnight. The mark's geometry is never redrawn, stretched or rotated. Both versions are inline `<symbol>`s at the top of `index.html` and SVG files in `public/assets/brand/`.
+- **Shapes:** large surfaces 32px radius, cards 24px, inputs 14px, buttons and chips fully rounded.
+- **Layouts:** a floating pill header, a bento hero (live network tile and stat tiles), a running band, an index-style services list on a scroll-linked spine, stacking process cards, a skeleton "coming soon" state, and a wordmark footer.
 
-The favicon set follows the guide (32 px and 16 px at 56% symbol on Deep, with the 16 px using the small-size variant). To regenerate it and the social preview image:
+The favicon set keeps the original guide's sizing (32 px and 16 px at 56% symbol, with the 16 px using the small-size variant), now on Midnight. To regenerate the icons and the social preview image:
 
 ```bash
 pip install pillow playwright && playwright install chromium
@@ -110,7 +112,7 @@ python3 tools/make-brand-assets.py
 ## Accessibility and performance
 
 - Semantic landmarks, a skip link, visible keyboard focus and labelled form fields with inline errors.
-- `prefers-reduced-motion`: the hero network renders as a single still frame and scroll-linked lines show fully drawn.
+- `prefers-reduced-motion`: the hero network renders as a single still frame, the running band stops, scroll-linked pieces show in their final state and the custom cursor is off.
 - No third-party scripts or fonts on the public site. The only external script is Decap CMS on `/admin`, pinned to an exact version with an integrity hash.
 
 ## Placeholders to avoid

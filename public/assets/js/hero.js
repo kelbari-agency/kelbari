@@ -1,4 +1,4 @@
-/* Kelbari hero — the Node K mark grows into a live, quiet network.
+/* Kelbari hero tile — the Node K mark grows into a live, quiet network.
    - Seeds sit on the mark's own nodes (64-unit grid), so the network visibly grows out of it.
    - Nodes drift slowly; the pointer (mouse or touch) gently pulls nearby nodes and links to them.
    - Pauses when the hero is off screen or the tab is hidden.
@@ -14,9 +14,9 @@
   const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   // Brand colours as rgb triplets (alpha is applied per draw).
-  const AQUA = '52,211,180';
-  const MINT = '227,247,242';
-  const MIST = '169,180,177';
+  const AQUA = '139,136,255'; // Electric
+  const MINT = '236,236,254'; // Haze
+  const MIST = '184,185,214'; // Mist
 
   // Mark geometry on its 64-unit grid.
   const SEEDS = [
@@ -67,14 +67,14 @@
 
     // keep nodes off the headline, intro text and buttons so the copy stays calm
     const pad = 14;
-    const textBoxes = Array.from(hero.querySelectorAll('.tagline, h1, .lede, .cta .btn, .facts')).map((n) => {
+    const textBoxes = Array.from(hero.querySelectorAll('[data-keep-clear]')).map((n) => {
       const r = n.getBoundingClientRect();
       return { l: r.left - hr.left - pad, r: r.right - hr.left + pad, t: r.top - hr.top - pad, b: r.bottom - hr.top + pad };
     });
 
     const narrow = W < 700;
     link = narrow ? 104 : clamp(W / 9, 110, 160);
-    const count = Math.round(clamp((W * H) / (narrow ? 21000 : 21000), narrow ? 16 : 22, 62));
+    const count = Math.round(clamp((W * H) / 9000, narrow ? 16 : 24, 54));
     soft = narrow ? 0.7 : 1;
     const minGap = narrow ? 42 : 54;
     const rand = rng(11);
@@ -84,7 +84,7 @@
       tries++;
       const x = rand() * W, y = rand() * H;
       // lean the network toward the mark (right on wide screens, top on narrow)
-      const bias = narrow ? 0.45 + 0.55 * (1 - smooth(0.2, 0.9, y / H)) : 0.22 + 0.78 * smooth(0.18, 0.7, x / W);
+      const bias = 0.92; // spread evenly around the mark inside its tile
       if (rand() > bias) continue;
       if (x > keepOut.l && x < keepOut.r && y > keepOut.t && y < keepOut.b) continue;
       if (textBoxes.some((b) => x > b.l && x < b.r && y > b.t && y < b.b)) continue;
