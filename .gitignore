@@ -12,3 +12,6 @@ Thumbs.db
 *.log
 __pycache__/
 .claude/
+
+# Build output
+dist/

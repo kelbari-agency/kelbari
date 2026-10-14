@@ -1,0 +1,16 @@
+{
+  "name": "kelbari-site",
+  "private": true,
+  "type": "module",
+  "description": "Kelbari website. Source in public/, production build in dist/.",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "preview": "npx serve dist"
+  },
+  "engines": { "node": ">=20" },
+  "devDependencies": {
+    "esbuild": "0.24.2",
+    "html-minifier-terser": "7.2.0",
+    "sharp": "0.33.5"
+  }
+}

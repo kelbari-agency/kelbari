@@ -1,9 +1,14 @@
 # Kelbari — Netlify settings.
-# Static site: no build step. Only the `public/` folder is published, so the
-# README, this file and tooling are never served.
+# Source lives in public/ (edited by hand and by the CMS). `npm run build` turns it into dist/:
+# minified HTML with the CSS inlined, one fingerprinted script, responsive WebP images,
+# generated service and project pages, and the sitemap. Only dist/ is published.
 
 [build]
-  publish = "public"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
 
 # Security headers on every page.
 [[headers]]
@@ -13,12 +18,49 @@
     X-Frame-Options = "SAMEORIGIN"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000"
 
-# Fonts never change under the same file name, so cache them for a year.
+# Fingerprinted script and stylesheet: a new name on every change, so cache them for a year.
+[[headers]]
+  for = "/assets/js/app.*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+[[headers]]
+  for = "/assets/css/styles.*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Fonts never change under the same file name.
 [[headers]]
   for = "/assets/fonts/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Project galleries are generated from the repo and never edited in place.
+[[headers]]
+  for = "/images/work/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# CMS uploads and brand files: long cache, refreshed in the background.
+[[headers]]
+  for = "/images/uploads/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, stale-while-revalidate=604800"
+[[headers]]
+  for = "/assets/brand/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, stale-while-revalidate=604800"
+[[headers]]
+  for = "/assets/og-image.png"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, stale-while-revalidate=604800"
+
+# Project data is read by the CMS; always check for a fresh copy.
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 # The www → kelbari.net redirect is handled by Netlify's domain settings
 # (primary domain), not by a rule here.

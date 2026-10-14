@@ -1,30 +1,35 @@
 # Kelbari website
 
-The marketing site for [Kelbari](https://kelbari.net): web development, social media marketing and graphic design, sold as one connected system.
+The marketing site for [Kelbari](https://kelbari.net): web development, digital marketing (including social media marketing) and graphic design, sold as one connected system.
 
-Plain HTML, CSS and JavaScript. No build step, no framework. Self-hosted fonts (Manrope and JetBrains Mono).
+Plain HTML, CSS and JavaScript, no framework. A small build step (`npm run build`) optimises it for production. Self-hosted fonts (Bricolage Grotesque, Geist and Geist Mono).
 
 ## Structure
 
 ```
 .
-├── netlify.toml              Netlify settings: publish folder, security headers, font caching
+├── netlify.toml              Netlify settings: build command, security headers, caching
+├── package.json              Build dependencies (esbuild, sharp, html-minifier-terser)
 ├── README.md
 ├── tools/
+│   ├── build.mjs             The production build: public/ → dist/
+│   ├── content/services.json Copy for the three service pages
 │   ├── make-brand-assets.py  Regenerates the favicon set, app icons and the social preview image
 │   └── og-template.html      Template for the social preview image (1200 × 630)
-└── public/                   Everything in here is published. Nothing outside it is.
+├── dist/                     Build output (not committed). This is what Netlify publishes.
+└── public/                   The source. Edit here; the CMS writes here too.
     ├── index.html            The single-page site
-    ├── thanks/index.html     Shown after a no-JavaScript form submission
     ├── 404.html              Not-found page
     ├── admin/                Decap CMS: index.html (loader) and config.yml (fields)
     ├── data/projects.json    The portfolio. Edited through /admin, or by hand
     ├── images/uploads/       Project cover images uploaded through /admin
     ├── assets/
     │   ├── css/styles.css    All styles, built on the brand tokens
-    │   ├── js/hero.js        Hero: the K mark grows into a live network
-    │   ├── js/main.js        Menu, services tree, process line, portfolio, contact form
-    │   ├── fonts/            Manrope (variable) and JetBrains Mono, woff2
+    │   ├── js/hero.js        Hero tile: the K mark grows into a live network
+    │   ├── js/main.js        Menu, header, services spine, stacking process cards, portfolio, contact form
+    │   ├── js/cursor.js      Custom Node K cursor (mouse/trackpad only)
+    │   ├── js/effects.js     Motion layer: headline and card reveals, card tilt, scroll progress, spotlights
+    │   ├── fonts/            Bricolage Grotesque, Geist, Geist Mono (variable woff2) and licences
     │   ├── brand/            Favicons, app icons, plain SVG copies of the Node K mark
     │   └── og-image.png      Social preview image
     ├── favicon.ico  robots.txt  sitemap.xml  site.webmanifest
@@ -32,12 +37,34 @@ Plain HTML, CSS and JavaScript. No build step, no framework. Self-hosted fonts (
 
 ## Preview locally
 
+Quick look at the source (no build needed):
+
 ```bash
 python3 -m http.server 8000 -d public
 # open http://localhost:8000
 ```
 
-The contact form's "Send by email" button needs Netlify to receive the submission, so it only works on a deployed site. WhatsApp, the portfolio and everything else work locally.
+The production version, exactly as Netlify builds it:
+
+```bash
+npm install
+npm run build
+npx serve dist
+```
+
+## What the build does
+
+`tools/build.mjs` runs on every Netlify deploy (including CMS edits):
+
+- **Responsive images:** WebP copies of every project cover (480, 800, 1200 px wide) and gallery image (800 px), served with `srcset` so phones download small files.
+- **Crawlable work:** the project cards are written into the home page HTML (search engines see them, nothing shifts while loading), and the project data is embedded so no extra request is needed.
+- **Generated pages:** `/web-development/`, `/digital-marketing/` and `/graphic-design/` (copy in `tools/content/services.json`), plus `/work/<slug>/` for every project with a gallery. Each has its own title, description, canonical URL, social tags, breadcrumbs and structured data (Service, FAQPage, CreativeWork, BreadcrumbList).
+- **Sitemap:** `sitemap.xml` lists every page and its images.
+- **Speed:** the four scripts become one minified, fingerprinted file cached for a year; the CSS is minified and inlined, so nothing blocks the first paint; every HTML page is minified.
+
+On the home page, clicking a gallery project opens it in the on-page viewer and the address bar shows `/work/<slug>/`. Opening that address directly (or from Google) loads the full standalone page.
+
+Everything works locally, including the contact form: both buttons open the visitor's own app (WhatsApp or their mail app) with the brief pre-filled, and nothing is sent until they press send there.
 
 ## Add or remove portfolio projects
 
@@ -70,18 +97,23 @@ Edit `public/data/projects.json`. An empty portfolio is `{ "projects": [] }`. Ea
 }
 ```
 
-`category` is one of: Web development, Social media marketing, Graphic design, Full brand system. `image` and `link` are optional.
+`category` is one of: Web development, Digital marketing, Graphic design, Full brand system. `image` and `link` are optional.
+
+Every card is clickable and has one button:
+
+- **View site**: the project has a `link`. Opens the live site in a new tab.
+- **View project**: the project has a `slug` and a `gallery` (a list of full-width images, each with `image`, `width` and `height`). Opens a viewer on this page at `kelbari.net/#work/<slug>`, so the work is shown here without sending visitors elsewhere. Gallery images live in `public/images/work/<slug>/`.
+
+The filter buttons above the cards are built from the categories in use.
 
 ## How deploys work
 
-- Every push or merge to `main` deploys to production at https://kelbari.net.
+- Every push or merge to `main` deploys to production at https://kelbari.net. Work on a branch and open a pull request to get a preview first.
 - Every pull request gets its own deploy preview URL, posted on the pull request.
-- `netlify.toml` publishes the `public/` folder with no build command.
+- `netlify.toml` runs `npm run build` and publishes `dist/`. Fingerprinted scripts, fonts and gallery images are cached for a year; uploads and brand files for 30 days.
 - Netlify DNS manages `kelbari.net`. `www.kelbari.net` redirects to the apex domain. Do not add or remove DNS records for email or anything else without checking with the owners first.
 
 ## One-time setup in Netlify (owner only)
-
-**Contact form email notifications.** The form is detected automatically on deploy and appears under **Forms → project-brief**. Add an email notification there (Forms → Form notifications) so submissions reach `kelbariofficial@gmail.com`.
 
 **CMS sign-in (GitHub OAuth).** Decap signs people in with GitHub through Netlify's OAuth provider:
 
@@ -93,27 +125,38 @@ Edit `public/data/projects.json`. An empty portfolio is `{ "projects": [] }`. Ea
 
 Never put the client secret in this repository.
 
-## Brand rules the code follows
+## Design system (v2)
 
-From the Kelbari Brand Guidelines v1.0:
+The site uses a v2 visual system. It replaces the colours and fonts in the original brand guide PDF; the Node K mark's shape and the copy are unchanged.
 
-- Colours: Deep `#07322F`, Signal Teal `#0F9B85`, Aqua `#34D3B4`, Mint `#E3F7F2`, Ink `#0C1412`, Graphite `#4C5754`, Mist `#A9B4B1`, Paper `#F2F6F5`, White. Roughly Deep 60%, Paper 30%, Aqua 7%, Teal 3%.
-- Aqua is an accent: never text on white or on teal. Teal on white is for text 24px and up only (this site uses teal for graphics and focus rings, not small text).
-- Manrope 800 for display and headings, 600 for labels and buttons, 400 for body. JetBrains Mono for small technical details.
-- The Node K mark is always the supplied vector, never redrawn, stretched, rotated, recoloured or given a shadow. Nothing enters its clear space (12 grid units).
-- Success and error colours appear only in form states.
+- **Type:** Bricolage Grotesque (variable, optical size) for display and headings; Geist for body, labels and buttons; Geist Mono only for step numbers and small technical details. All self-hosted in `public/assets/fonts/` with their licences.
+- **Colours:** Midnight `#12133B` (dark surfaces, main text), Cobalt `#3B36F4` (primary actions on light surfaces), Electric `#8B88FF` (accent on dark surfaces), Signal `#FF5A7A` (rare highlight), Haze `#ECECFE`, Paper `#F8F8FC`, White, Slate `#555878` (secondary text), Line `#DADBEE`.
+- **Contrast rules:** never Cobalt on Midnight (use Electric there); never Signal as text on light surfaces; text on Signal is always Midnight. Every text pairing on the site meets WCAG AA.
+- **Logo colours:** on light, strokes and stem nodes Midnight, outer nodes Cobalt, hub filled Paper. On dark, strokes and stem nodes White, outer nodes Electric, hub filled Midnight. The mark's geometry is never redrawn, stretched or rotated. Both versions are inline `<symbol>`s at the top of `index.html` and SVG files in `public/assets/brand/`.
+- **Shapes:** large surfaces 32px radius, cards 24px, inputs 14px, buttons and chips fully rounded.
+- **Layouts:** a floating pill header, a bento hero (live network tile and stat tiles), a running band, an index-style services list on a scroll-linked spine, stacking process cards, a skeleton "coming soon" state, and a wordmark footer.
 
-The favicon set follows the guide (32 px and 16 px at 56% symbol on Deep, with the 16 px using the small-size variant). To regenerate it and the social preview image:
+The favicon set keeps the original guide's sizing (32 px and 16 px at 56% symbol, with the 16 px using the small-size variant), now on Midnight. To regenerate the icons and the social preview image:
 
 ```bash
 pip install pillow playwright && playwright install chromium
 python3 tools/make-brand-assets.py
 ```
 
+## SEO checklist for the owners
+
+These need your accounts, so they can't be done from the code:
+
+1. **Google Search Console:** add `kelbari.net` as a Domain property (verify with a TXT record in Netlify DNS; that's the only DNS change it needs), then submit `https://kelbari.net/sitemap.xml`.
+2. **Bing Webmaster Tools:** import the site from Search Console.
+3. **Google Business Profile:** create one for Kelbari (a service-area business can hide its street address).
+4. **Directory listings:** Clutch, GoodFirms, DesignRush and TechBehemoths are where agency buyers compare firms; list Kelbari on each with a link to kelbari.net.
+5. **LinkedIn company page:** link to kelbari.net, and share each new project page when it goes up.
+
 ## Accessibility and performance
 
 - Semantic landmarks, a skip link, visible keyboard focus and labelled form fields with inline errors.
-- `prefers-reduced-motion`: the hero network renders as a single still frame and scroll-linked lines show fully drawn.
+- `prefers-reduced-motion`: the whole effects layer (`effects.js`) is skipped, the hero network renders as a single still frame, the running band stops, scroll-linked pieces show in their final state and the custom cursor is off.
 - No third-party scripts or fonts on the public site. The only external script is Decap CMS on `/admin`, pinned to an exact version with an integrity hash.
 
 ## Placeholders to avoid

@@ -1,3 +1,424 @@
 {
-  "projects": []
+  "projects": [
+    {
+      "title": "shapargullay",
+      "category": "Web development",
+      "client": "shapargullay",
+      "location": "Pakistan",
+      "description": "An event ticketing platform for Pakistan. People find concerts, qawwali, comedy, theatre and workshops by city or category, pay by card and get their ticket instantly. Organisers list and sell their own events, and every listing is checked by a person before it goes on sale.",
+      "highlights": [
+        "Events by city and category, from Lahore and Karachi to Multan and Peshawar",
+        "Card payments through Safepay, with the 4% service fee shown before you pay",
+        "Instant tickets with QR entry, emailed PDFs and Apple and Google Wallet passes",
+        "Ticket messages on WhatsApp, free transfers to friends and tools for organisers"
+      ],
+      "built_with": [
+        "Next.js",
+        "Netlify Functions",
+        "Safepay",
+        "WhatsApp Business API"
+      ],
+      "image": "/images/uploads/shapargullay.jpg",
+      "link": "https://shapargullay.com"
+    },
+    {
+      "title": "Mian Art Store",
+      "category": "Web development",
+      "client": "Mian Art Store",
+      "location": "Bahawalpur, Pakistan",
+      "description": "An online shop for a stationery and art-supply store beside Islamia University. Artists, students and offices can browse paints, canvases, school and office supplies by category or by brand, and order for delivery anywhere in Pakistan.",
+      "highlights": [
+        "Full catalogue by category and by brand, from Deer and UHU to Keep Smiling",
+        "Product variants, sale prices, deals and ready-made bundles",
+        "Search, wishlist, compare, quick view and customer accounts",
+        "Cash on delivery, with free delivery on orders over Rs. 3,000"
+      ],
+      "built_with": [
+        "WordPress",
+        "WooCommerce"
+      ],
+      "image": "/images/uploads/mian-art-store.jpg",
+      "link": "https://mianartstore.com"
+    },
+    {
+      "title": "Barrientos Construction",
+      "category": "Web development",
+      "client": "Barrientos Construction LLC",
+      "location": "United States",
+      "description": "A lead-generation site for a licensed residential and commercial contractor. It lays out more than 25 services, from kitchen remodels to roofing and HVAC, shows recent projects and client reviews, and turns visitors into estimate requests.",
+      "highlights": [
+        "Service pages for homeowners, landlords, investors and commercial clients",
+        "Free-estimate and callback forms with a service picker",
+        "Project gallery with filters, testimonials and a blog",
+        "Vendor registration and a language switcher"
+      ],
+      "built_with": [
+        "WordPress",
+        "Elementor"
+      ],
+      "image": "/images/uploads/barrientos-construction.jpg",
+      "link": "https://barrientosconstructionllc.com"
+    },
+    {
+      "title": "FIXMYIMEI",
+      "category": "Web development",
+      "client": "FIXMYIMEI",
+      "location": "United States",
+      "description": "An online store for remote phone services: IMEI repair, carrier unlocks, FRP and MDM removal and Samsung region unlocks. Customers find their brand and model, order online and the work is done remotely.",
+      "highlights": [
+        "Service catalogue by brand and model: Samsung, Google Pixel, Apple, Motorola and Vivo",
+        "Home page with a promotional slider, popular categories and best offers",
+        "Cart, checkout, customer accounts, wishlist and compare",
+        "Product pages that explain each service in plain terms"
+      ],
+      "built_with": [
+        "WordPress",
+        "WooCommerce",
+        "Slider Revolution"
+      ],
+      "image": "/images/uploads/fixmyimei.jpg",
+      "link": "https://fixmyimei.com"
+    },
+    {
+      "title": "FanCourt",
+      "category": "Web development",
+      "description": "A financial advisory website designed and built from scratch: fully responsive and pixel-sharp on every screen.",
+      "highlights": [
+        "Custom design, no template",
+        "Responsive layouts from phone to desktop"
+      ],
+      "built_with": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "image": "/images/uploads/fancourt.jpg",
+      "slug": "fancourt",
+      "gallery": [
+        {
+          "image": "/images/work/fancourt/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/fancourt/02.webp",
+          "width": 1366,
+          "height": 1400
+        }
+      ]
+    },
+    {
+      "title": "MAIVA",
+      "category": "Web development",
+      "description": "An AI company's investor pitch deck and website: decks and infographics that make the product clear, plus front-end polish on a responsive site.",
+      "highlights": [
+        "Investor-ready pitch decks and infographics",
+        "Responsive website front end"
+      ],
+      "built_with": [
+        "PowerPoint",
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "image": "/images/uploads/maiva.jpg",
+      "slug": "maiva",
+      "gallery": [
+        {
+          "image": "/images/work/maiva/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/03.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/04.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/05.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/06.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/07.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/08.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/maiva/09.webp",
+          "width": 1366,
+          "height": 930
+        }
+      ]
+    },
+    {
+      "title": "BabyResume",
+      "category": "Graphic design",
+      "description": "A mobile app redesign with a cleaner layout, better usability and a set of new UI components.",
+      "highlights": [
+        "Simplified screens and clearer hierarchy",
+        "New, reusable UI components"
+      ],
+      "built_with": [
+        "Figma"
+      ],
+      "image": "/images/uploads/babyresume.jpg",
+      "slug": "babyresume",
+      "gallery": [
+        {
+          "image": "/images/work/babyresume/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/babyresume/02.webp",
+          "width": 1366,
+          "height": 1400
+        }
+      ]
+    },
+    {
+      "title": "PMHOA Pro",
+      "category": "Graphic design",
+      "description": "A webinar deck overhaul: clear structure, real hierarchy and zero clutter, so the talk carries the message.",
+      "highlights": [
+        "Restructured story and slide flow",
+        "Consistent type and layout system"
+      ],
+      "built_with": [
+        "PowerPoint"
+      ],
+      "image": "/images/uploads/pmhoa-pro.jpg",
+      "slug": "pmhoa-pro",
+      "gallery": [
+        {
+          "image": "/images/work/pmhoa-pro/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/03.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/04.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/05.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/06.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/07.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/08.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/pmhoa-pro/09.webp",
+          "width": 1366,
+          "height": 930
+        }
+      ]
+    },
+    {
+      "title": "Apartment Maid",
+      "category": "Digital marketing",
+      "description": "Social and email campaigns that landlords actually open: Instagram and LinkedIn content, captions and scheduling, plus marketing emails. We also helped shape the brand and logo.",
+      "highlights": [
+        "Instagram and LinkedIn content with captions and scheduling",
+        "Marketing emails for landlords",
+        "Support on branding and the logo"
+      ],
+      "image": "/images/uploads/apartment-maid.jpg",
+      "slug": "apartment-maid",
+      "gallery": [
+        {
+          "image": "/images/work/apartment-maid/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/apartment-maid/02.webp",
+          "width": 1366,
+          "height": 477
+        }
+      ]
+    },
+    {
+      "title": "Brighter Strides ABA",
+      "category": "Digital marketing",
+      "description": "Monthly social content for a children's ABA therapy centre: warm, playful and on brand.",
+      "highlights": [
+        "Monthly content calendars",
+        "Event graphics and community posts"
+      ],
+      "image": "/images/uploads/brighter-strides.jpg",
+      "slug": "brighter-strides",
+      "gallery": [
+        {
+          "image": "/images/work/brighter-strides/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/brighter-strides/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/brighter-strides/03.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/brighter-strides/04.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/brighter-strides/05.webp",
+          "width": 1366,
+          "height": 545
+        }
+      ]
+    },
+    {
+      "title": "QuizPur",
+      "category": "Digital marketing",
+      "description": "Award-day recaps and campaign posts for a student quiz platform, alongside website and UI improvements.",
+      "highlights": [
+        "Award-day recap posts and campaigns",
+        "Website and UI improvements"
+      ],
+      "image": "/images/uploads/quizpur.jpg",
+      "slug": "quizpur",
+      "gallery": [
+        {
+          "image": "/images/work/quizpur/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/quizpur/02.webp",
+          "width": 1366,
+          "height": 1400
+        }
+      ]
+    },
+    {
+      "title": "Qayas Design Studio",
+      "category": "Graphic design",
+      "description": "Flyers, brochures and social content for a design studio's clients, plus LinkedIn management for international accounts.",
+      "highlights": [
+        "Flyers, brochures and social posts",
+        "LinkedIn management for international clients",
+        "UI mockups"
+      ],
+      "image": "/images/uploads/qayas-design-studio.jpg",
+      "slug": "qayas-design-studio",
+      "gallery": [
+        {
+          "image": "/images/work/qayas-design-studio/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/qayas-design-studio/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/qayas-design-studio/03.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/qayas-design-studio/04.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/qayas-design-studio/05.webp",
+          "width": 1366,
+          "height": 771
+        }
+      ]
+    },
+    {
+      "title": "Tiernan Travels",
+      "category": "Digital marketing",
+      "location": "UK and Ireland",
+      "description": "Scroll-stopping social media sets for a travel specialist covering the UK and Ireland.",
+      "highlights": [
+        "Social media graphic sets for destinations and offers"
+      ],
+      "image": "/images/uploads/tiernan-travels.jpg",
+      "slug": "tiernan-travels",
+      "gallery": [
+        {
+          "image": "/images/work/tiernan-travels/01.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/tiernan-travels/02.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/tiernan-travels/03.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/tiernan-travels/04.webp",
+          "width": 1366,
+          "height": 1400
+        },
+        {
+          "image": "/images/work/tiernan-travels/05.webp",
+          "width": 1366,
+          "height": 545
+        }
+      ]
+    }
+  ]
 }

@@ -1,0 +1,169 @@
+{
+  "process": [
+    {
+      "name": "Discovery",
+      "text": "A scoping call where we map goals, audience and constraints. You leave with a written brief, whether or not you hire us."
+    },
+    {
+      "name": "Design",
+      "text": "Wireframes first, visuals second. You review flat screens before any production code is written."
+    },
+    {
+      "name": "Build",
+      "text": "Weekly builds on a staging link. You watch it come together instead of waiting for a reveal."
+    },
+    {
+      "name": "Launch & run",
+      "text": "We ship, hand over the keys and the documentation, then stay on for content, campaigns and upkeep if you want us."
+    }
+  ],
+  "services": [
+    {
+      "slug": "web-development",
+      "name": "Web development",
+      "category": "Web development",
+      "title": "Web Development Company in Bahawalpur, Pakistan | Kelbari",
+      "description": "Kelbari builds fast, search-friendly websites, online stores and custom tools in Bahawalpur, Pakistan, for clients worldwide. Proposal within 48 hours.",
+      "h1": "Websites that load fast, rank well and stay yours.",
+      "lede": "Marketing sites, online stores and custom tools, built to load quickly, show up in search and be edited by your own team.",
+      "items": [
+        {
+          "name": "Marketing and landing sites",
+          "text": "Clear, quick pages that explain what you do and turn visits into enquiries."
+        },
+        {
+          "name": "E-commerce storefronts",
+          "text": "Online shops with catalogues, cart and checkout, payments and delivery set up for the way you sell."
+        },
+        {
+          "name": "Custom dashboards and tools",
+          "text": "Internal tools that replace spreadsheets and manual steps for your team."
+        },
+        {
+          "name": "Performance and SEO groundwork",
+          "text": "Fast loading, clean code, structured data and the technical setup search engines look for."
+        }
+      ],
+      "faq": [
+        {
+          "q": "How long does a website take to build?",
+          "a": "It depends on the scope. After a scoping call you get a written brief and a proposal with a timeline, usually within 48 hours, and you can follow weekly builds on a staging link."
+        },
+        {
+          "q": "Can my team edit the website after launch?",
+          "a": "Yes. Sites are built to be edited by your own team, and at handover you get the documentation that explains how."
+        },
+        {
+          "q": "Who owns the website, code and accounts?",
+          "a": "You do. Every engagement ends with you owning every file, repository and account."
+        },
+        {
+          "q": "Do you work with businesses outside Pakistan?",
+          "a": "Yes. We're based in Bahawalpur and have built sites for businesses in Pakistan and the United States. We work with clients over WhatsApp, email and video calls."
+        }
+      ]
+    },
+    {
+      "slug": "digital-marketing",
+      "name": "Digital marketing",
+      "category": "Digital marketing",
+      "title": "Digital Marketing Agency in Bahawalpur, Pakistan | Kelbari",
+      "description": "Social media marketing, Meta and TikTok campaigns, email and content from Kelbari in Bahawalpur, with monthly reporting that ties spend to results.",
+      "h1": "Digital marketing that ties spend to something you can count.",
+      "lede": "Social media, paid campaigns and the content behind them, with reporting that shows what your budget actually did.",
+      "items": [
+        {
+          "name": "Social media marketing",
+          "text": "Content calendars, posts, captions and scheduling for Instagram, Facebook, LinkedIn and TikTok."
+        },
+        {
+          "name": "Meta and TikTok paid campaigns",
+          "text": "Campaigns planned, built and tuned around a clear goal, from enquiries to sales."
+        },
+        {
+          "name": "Email campaigns",
+          "text": "Marketing emails designed and written for the people you need to reach."
+        },
+        {
+          "name": "Community management",
+          "text": "Replies, comments and messages handled in your brand's voice."
+        },
+        {
+          "name": "Monthly performance reporting",
+          "text": "A plain report each month that ties spend back to results you can count."
+        }
+      ],
+      "faq": [
+        {
+          "q": "Which platforms do you manage?",
+          "a": "Instagram, Facebook, LinkedIn and TikTok for organic content, and Meta and TikTok for paid campaigns."
+        },
+        {
+          "q": "Do you create the content as well?",
+          "a": "Yes. The posts, artwork and captions are made in-house by the same team that plans and runs the campaigns."
+        },
+        {
+          "q": "How do you report on results?",
+          "a": "You get a monthly performance report that ties spend back to results you can count, in plain language."
+        },
+        {
+          "q": "Am I locked into a long contract?",
+          "a": "No. There is no retainer you can't cancel."
+        }
+      ]
+    },
+    {
+      "slug": "graphic-design",
+      "name": "Graphic design",
+      "category": "Graphic design",
+      "title": "Graphic Design & Branding in Bahawalpur, Pakistan | Kelbari",
+      "description": "Logos and identity systems, brand guidelines, social artwork, pitch decks and print, designed as one system by Kelbari in Bahawalpur, Pakistan.",
+      "h1": "Graphic design built as a system, not a folder of files.",
+      "lede": "Identity, campaign artwork, presentations and print, built with rules so everything you publish looks like it came from one place.",
+      "items": [
+        {
+          "name": "Logo and identity systems",
+          "text": "A mark, colours and type that work together and hold up at every size."
+        },
+        {
+          "name": "Brand guideline documents",
+          "text": "The rules for using your brand, written so anyone on your team can follow them."
+        },
+        {
+          "name": "Campaign and social artwork",
+          "text": "Posts, ads and campaign sets that stay consistent from one month to the next."
+        },
+        {
+          "name": "Pitch decks and presentations",
+          "text": "Investor and webinar decks with clear structure and real hierarchy."
+        },
+        {
+          "name": "App and website UI",
+          "text": "Screens and components for apps and websites, ready to hand to developers."
+        },
+        {
+          "name": "Print and packaging collateral",
+          "text": "Flyers, brochures and packaging prepared properly for print."
+        }
+      ],
+      "faq": [
+        {
+          "q": "What do I receive at the end?",
+          "a": "The design files and exports for screen and print, plus guidelines that explain how to use them. You own every file."
+        },
+        {
+          "q": "Can you refresh an existing logo or brand?",
+          "a": "Yes. We can build on what you have or start again, and we'll explain the trade-offs before any work begins."
+        },
+        {
+          "q": "Do you design pitch decks and presentations?",
+          "a": "Yes. We design investor pitch decks, webinar decks and company presentations."
+        },
+        {
+          "q": "Can the same team run our social media?",
+          "a": "Yes. Design, digital marketing and web development all sit with one team, so your artwork, feed and website stay in sync."
+        }
+      ]
+    }
+  ]
+}

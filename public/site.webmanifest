@@ -1,13 +1,21 @@
 {
   "name": "Kelbari",
   "short_name": "Kelbari",
-  "description": "Web development, social media marketing and graphic design as one connected system.",
+  "description": "Web development, digital marketing and graphic design as one connected system.",
   "start_url": "/",
   "display": "browser",
-  "theme_color": "#07322F",
-  "background_color": "#07322F",
+  "theme_color": "#12133B",
+  "background_color": "#12133B",
   "icons": [
-    { "src": "/assets/brand/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/assets/brand/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "/assets/brand/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/brand/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }

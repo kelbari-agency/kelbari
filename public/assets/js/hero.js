@@ -1,4 +1,4 @@
-/* Kelbari hero — the Node K mark grows into a live, quiet network.
+/* Kelbari hero tile — the Node K mark grows into a live, quiet network.
    - Seeds sit on the mark's own nodes (64-unit grid), so the network visibly grows out of it.
    - Nodes drift slowly; the pointer (mouse or touch) gently pulls nearby nodes and links to them.
    - Pauses when the hero is off screen or the tab is hidden.
@@ -14,9 +14,9 @@
   const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   // Brand colours as rgb triplets (alpha is applied per draw).
-  const AQUA = '52,211,180';
-  const MINT = '227,247,242';
-  const MIST = '169,180,177';
+  const AQUA = '139,136,255'; // Electric
+  const MINT = '236,236,254'; // Haze
+  const MIST = '184,185,214'; // Mist
 
   // Mark geometry on its 64-unit grid.
   const SEEDS = [
@@ -29,9 +29,9 @@
   const CLEAR = 12; // clear space = one node diameter = 12 grid units
 
   let W = 0, H = 0, dpr = 1;
-  let nodes = [], seeds = [], keepOut = null, link = 140;
+  let nodes = [], seeds = [], keepOut = null, link = 140, soft = 1;
   let t0 = performance.now();
-  let raf = 0, inView = true;
+  let raf = 0, inView = true, booted = false;
   const pointer = { x: 0, y: 0, active: false, fade: 0, timer: 0 };
 
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -67,14 +67,15 @@
 
     // keep nodes off the headline, intro text and buttons so the copy stays calm
     const pad = 14;
-    const textBoxes = Array.from(hero.querySelectorAll('.tagline, h1, .lede, .cta .btn, .facts')).map((n) => {
+    const textBoxes = Array.from(hero.querySelectorAll('[data-keep-clear]')).map((n) => {
       const r = n.getBoundingClientRect();
       return { l: r.left - hr.left - pad, r: r.right - hr.left + pad, t: r.top - hr.top - pad, b: r.bottom - hr.top + pad };
     });
 
     const narrow = W < 700;
     link = narrow ? 104 : clamp(W / 9, 110, 160);
-    const count = Math.round(clamp((W * H) / (narrow ? 15000 : 21000), 22, 62));
+    const count = Math.round(clamp((W * H) / 9000, narrow ? 16 : 24, 54));
+    soft = narrow ? 0.7 : 1;
     const minGap = narrow ? 42 : 54;
     const rand = rng(11);
     const pts = [];
@@ -83,7 +84,7 @@
       tries++;
       const x = rand() * W, y = rand() * H;
       // lean the network toward the mark (right on wide screens, top on narrow)
-      const bias = narrow ? 0.45 + 0.55 * (1 - smooth(0.2, 0.9, y / H)) : 0.22 + 0.78 * smooth(0.18, 0.7, x / W);
+      const bias = 0.92; // spread evenly around the mark inside its tile
       if (rand() > bias) continue;
       if (x > keepOut.l && x < keepOut.r && y > keepOut.t && y < keepOut.b) continue;
       if (textBoxes.some((b) => x > b.l && x < b.r && y > b.t && y < b.b)) continue;
@@ -137,7 +138,7 @@
     for (const n of nodes) {
       if (n.g <= 0) continue;
       const near = Math.hypot(n.seed.x - n.x, n.seed.y - n.y);
-      const a = (n.g < 1 ? 0.34 : 0.2) * Math.min(1, n.g * 3) * clamp(1.15 - near / (link * 2.1), 0, 1);
+      const a = soft * (n.g < 1 ? 0.34 : 0.2) * Math.min(1, n.g * 3) * clamp(1.15 - near / (link * 2.1), 0, 1);
       if (a <= 0.01) continue;
       ctx.strokeStyle = `rgba(${AQUA},${a})`;
       ctx.beginPath(); ctx.moveTo(n.seed.x, n.seed.y); ctx.lineTo(n.x, n.y); ctx.stroke();
@@ -150,7 +151,7 @@
         const b = nodes[j]; if (b.g <= 0.2) continue;
         const d = Math.hypot(a.x - b.x, a.y - b.y);
         if (d > link) continue;
-        const al = (1 - d / link) * 0.3 * Math.min(a.g, b.g);
+        const al = soft * (1 - d / link) * 0.3 * Math.min(a.g, b.g);
         ctx.strokeStyle = `rgba(${AQUA},${al})`;
         ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
       }
@@ -166,8 +167,10 @@
         ctx.strokeStyle = `rgba(${AQUA},${al})`;
         ctx.beginPath(); ctx.moveTo(pointer.x, pointer.y); ctx.lineTo(n.x, n.y); ctx.stroke();
       }
-      ctx.fillStyle = `rgba(${AQUA},${0.9 * pointer.fade})`;
-      ctx.beginPath(); ctx.arc(pointer.x, pointer.y, 3, 0, 6.283); ctx.fill();
+      if (!document.documentElement.classList.contains('has-kcursor')) {
+        ctx.fillStyle = `rgba(${AQUA},${0.9 * pointer.fade})`;
+        ctx.beginPath(); ctx.arc(pointer.x, pointer.y, 3, 0, 6.283); ctx.fill();
+      }
     }
 
     // nodes
@@ -187,7 +190,7 @@
     draw();
     if (inView && !document.hidden) raf = requestAnimationFrame(frame);
   }
-  function start() { if (!raf && !reduceQuery.matches && inView && !document.hidden) raf = requestAnimationFrame(frame); }
+  function start() { if (booted && !raf && !reduceQuery.matches && inView && !document.hidden) raf = requestAnimationFrame(frame); }
 
   function renderStatic() {
     layout(); step(performance.now(), true); draw();
@@ -215,15 +218,23 @@
   let resizeTimer = 0;
   new ResizeObserver(() => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { rebuild(); start(); }, 120);
+    resizeTimer = setTimeout(() => { if (booted) { rebuild(); start(); } }, 120);
   }).observe(hero);
   new IntersectionObserver(([en]) => { inView = en.isIntersecting; if (inView) start(); }, { threshold: 0 }).observe(hero);
   document.addEventListener('visibilitychange', start);
   reduceQuery.addEventListener('change', () => {
+    if (!booted) return;
     if (reduceQuery.matches) { cancelAnimationFrame(raf); raf = 0; renderStatic(); }
     else { t0 = performance.now(); layout(); start(); }
   });
 
-  layout();
-  if (reduceQuery.matches) { step(0, true); draw(); } else { t0 = performance.now(); start(); }
+  // Start once the page has finished loading, so the network never competes with first paint.
+  const boot = () => {
+    booted = true;
+    layout();
+    if (reduceQuery.matches) { step(0, true); draw(); } else { t0 = performance.now(); start(); }
+  };
+  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 200));
+  if (document.readyState === 'complete') idle(boot, { timeout: 1200 });
+  else window.addEventListener('load', () => idle(boot, { timeout: 1200 }), { once: true });
 })();
