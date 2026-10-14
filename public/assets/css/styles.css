@@ -709,3 +709,11 @@ html.viewer-open .progress, html.menu-open .progress { opacity: 0; }
   .fx .fx-split .wi, .fx .f-word .l, .fx .fx-card, .fx .viewer-gallery img { opacity: 1 !important; transform: none !important; translate: none !important; }
   .fx .contact::before, .fx .contact::after, .fx .band i { animation: none; }
 }
+
+/* ---------- Floating panels: dark/cobalt sections sit as inset cards, not edge to edge ---------- */
+:root { --inset: clamp(10px, 1.4vw, 20px); }
+.about, .contact, .site-footer { margin: 0 var(--inset) var(--inset); border-radius: var(--r-xl); overflow: hidden; }
+.site-footer { margin-bottom: max(var(--inset), env(safe-area-inset-bottom)); }
+@media (max-width: 639px) {
+  .about, .contact, .site-footer { border-radius: 26px; }
+}
