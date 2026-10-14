@@ -637,3 +637,75 @@ html.viewer-open { overflow: hidden; }
 html.viewer-open .kcursor { opacity: 0 !important; }
 html.has-kcursor .viewer, html.has-kcursor .viewer * { cursor: auto; }
 html.has-kcursor .viewer a, html.has-kcursor .viewer button { cursor: pointer; }
+
+/* ---------- Effects layer (effects.js adds html.fx; nothing here runs with reduced motion) ---------- */
+/* Scroll progress line */
+.progress { position: fixed; top: 0; left: 0; right: 0; z-index: 90; height: 3px; transform: scaleX(0); transform-origin: 0 50%; background: linear-gradient(90deg, var(--cobalt), var(--electric) 60%, var(--signal)); pointer-events: none; }
+html.viewer-open .progress, html.menu-open .progress { opacity: 0; }
+
+/* Headlines: words rise out of a mask */
+.fx .fx-split .w { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .04em .12em; margin: 0 -.04em -.12em; }
+.fx .fx-split .wi { display: inline-block; transform: translateY(105%) rotate(4deg); transform-origin: 0 100%; transition: transform .9s var(--ease) var(--d, 0s); }
+.fx .fx-split.is-in .wi { transform: none; }
+.fx .hero h1.fx-split { opacity: 1; transform: none; animation: none; }
+.fx .hero h1.fx-split .wi { transition-delay: calc(.15s + var(--d, 0s)); transition-duration: 1s; }
+
+/* Footer wordmark: letters rise in */
+.fx .f-word .l { display: inline-block; opacity: 0; transform: translateY(45%); transition: opacity .7s var(--ease) var(--d), transform 1s var(--ease) var(--d), color .4s; }
+.fx .f-word.is-in .l { opacity: 1; transform: none; }
+.fx .f-word .l:hover { color: var(--electric); transition-delay: 0s; transform: translateY(-6%); }
+
+/* Project cards: stagger in, then tilt with a glare and a drifting cover */
+.fx .fx-card { opacity: 0; translate: 0 40px; transition: opacity .8s var(--ease) var(--stagger, 0s), translate .9s var(--ease) var(--stagger, 0s), transform .5s var(--ease), box-shadow .35s; }
+.fx .fx-card.is-in { opacity: 1; translate: none; }
+.fx .fx-card.is-tilt { transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-6px); transition: opacity .8s var(--ease), translate .9s var(--ease), transform .15s linear, box-shadow .35s; }
+.fx .fx-card .glare { position: absolute; inset: 0; z-index: 1; border-radius: inherit; pointer-events: none; opacity: 0; background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, .5), transparent 55%); mix-blend-mode: soft-light; transition: opacity .35s; }
+.fx .fx-card.is-tilt .glare { opacity: 1; }
+.fx .fx-card .thumb img { transition: transform .9s var(--ease); }
+.fx .fx-card.is-tilt .thumb img { transform: scale(1.08) translate(var(--px, 0), var(--py, 0)); transition-duration: .5s; }
+.fx .fx-card .cat { transition: background .3s, color .3s; }
+.fx .fx-card:hover .cat { background: var(--cobalt); color: var(--white); }
+
+/* Filter: cards glide (View Transitions where supported) */
+::view-transition-group(*) { animation-duration: .5s; animation-timing-function: cubic-bezier(.22, .8, .2, 1); }
+.fx .filter { transition: background .25s, color .25s, box-shadow .25s, transform .25s var(--ease); }
+.fx .filter:active { transform: scale(.96); }
+
+/* Buttons: a light sweep across on hover */
+.fx .btn:not(.pbtn):not(.btn-ghost) { position: relative; overflow: hidden; isolation: isolate; }
+.fx .btn:not(.pbtn):not(.btn-ghost)::before { content: ""; position: absolute; inset: -2px; z-index: -1; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .32) 50%, transparent 70%); transform: translateX(-110%); transition: transform .7s var(--ease); pointer-events: none; }
+.fx .btn:not(.pbtn):not(.btn-ghost):hover::before { transform: translateX(110%); }
+.fx .pbtn svg { transition: transform .35s var(--ease); }
+
+/* Stat tiles: a spotlight follows the mouse; tiles lift */
+.fx .stat { position: relative; isolation: isolate; overflow: hidden; transition: transform .45s var(--ease), box-shadow .45s; }
+.fx .stat.spot::after { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .35), transparent 65%); transition: opacity .4s; pointer-events: none; }
+.fx .stat.spot:hover::after { opacity: 1; }
+.fx .stat:hover { transform: translateY(-4px); box-shadow: 0 24px 40px -26px rgba(18, 19, 59, .5); }
+
+/* Contact: slow glow drifting behind the form */
+.fx .contact { position: relative; isolation: isolate; overflow: hidden; }
+.fx .contact::before, .fx .contact::after { content: ""; position: absolute; z-index: -1; width: min(70vw, 760px); aspect-ratio: 1; border-radius: 50%; filter: blur(70px); opacity: .55; pointer-events: none; }
+.fx .contact::before { left: -18%; top: -30%; background: radial-gradient(circle, var(--electric), transparent 65%); animation: drift-a 18s ease-in-out infinite alternate; }
+.fx .contact::after { right: -20%; bottom: -40%; background: radial-gradient(circle, rgba(255, 90, 122, .7), transparent 62%); animation: drift-b 22s ease-in-out infinite alternate; }
+@keyframes drift-a { to { transform: translate(18vw, 22%) scale(1.15); } }
+@keyframes drift-b { to { transform: translate(-16vw, -18%) scale(.9); } }
+
+/* Running band dots pulse */
+.fx .band i { animation: dot-pulse 2.4s ease-in-out infinite; }
+.fx .band i:nth-of-type(2n) { animation-delay: 1.2s; }
+@keyframes dot-pulse { 50% { box-shadow: 0 0 0 9px rgba(139, 136, 255, .08); } }
+
+/* Viewer gallery images fade in as they load */
+.fx .viewer-gallery img { opacity: 0; transform: translateY(14px); transition: opacity .7s var(--ease), transform .8s var(--ease); }
+.fx .viewer-gallery img.is-loaded { opacity: 1; transform: none; }
+
+/* Process step numbers and service icons get a little life on hover */
+.fx .pillar .p-icon { transition: transform .5s var(--ease); }
+.fx .pillar:hover .p-icon { transform: rotate(-8deg) scale(1.08); }
+
+@media (prefers-reduced-motion: reduce) {
+  .progress { display: none; }
+  .fx .fx-split .wi, .fx .f-word .l, .fx .fx-card, .fx .viewer-gallery img { opacity: 1 !important; transform: none !important; translate: none !important; }
+  .fx .contact::before, .fx .contact::after, .fx .band i { animation: none; }
+}

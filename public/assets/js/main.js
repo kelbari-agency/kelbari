@@ -340,8 +340,16 @@
             b.append(el('span', 'count', String(n)));
             b.setAttribute('aria-pressed', String(c === 'All'));
             b.addEventListener('click', () => {
-              chips.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-              cards.forEach((k) => { k.hidden = !(c === 'All' || k.dataset.cat === c); });
+              const apply = () => {
+                chips.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+                cards.forEach((k) => { k.hidden = !(c === 'All' || k.dataset.cat === c); });
+              };
+              // Cards glide to their new places where the browser supports view transitions
+              if (document.startViewTransition && !reduceQuery.matches) {
+                cards.forEach((k, i) => { k.style.viewTransitionName = `p${i}`; });
+                const vt = document.startViewTransition(apply);
+                vt.finished.finally(() => cards.forEach((k) => { k.style.viewTransitionName = ''; }));
+              } else apply();
             });
             filters.appendChild(b);
             return b;
@@ -351,6 +359,7 @@
         grid.hidden = false;
         empty.hidden = true;
         setupViewer(viewerItems, safeUrl, el);
+        document.dispatchEvent(new CustomEvent('kelbari:projects'));
       })
       .catch(() => { /* keep the "coming soon" state */ });
   })();

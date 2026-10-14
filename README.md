@@ -24,6 +24,7 @@ Plain HTML, CSS and JavaScript. No build step, no framework. Self-hosted fonts (
     │   ├── js/hero.js        Hero tile: the K mark grows into a live network
     │   ├── js/main.js        Menu, header, services spine, stacking process cards, portfolio, contact form
     │   ├── js/cursor.js      Custom Node K cursor (mouse/trackpad only)
+    │   ├── js/effects.js     Motion layer: headline and card reveals, card tilt, scroll progress, spotlights
     │   ├── fonts/            Bricolage Grotesque, Geist, Geist Mono (variable woff2) and licences
     │   ├── brand/            Favicons, app icons, plain SVG copies of the Node K mark
     │   └── og-image.png      Social preview image
@@ -119,7 +120,7 @@ python3 tools/make-brand-assets.py
 ## Accessibility and performance
 
 - Semantic landmarks, a skip link, visible keyboard focus and labelled form fields with inline errors.
-- `prefers-reduced-motion`: the hero network renders as a single still frame, the running band stops, scroll-linked pieces show in their final state and the custom cursor is off.
+- `prefers-reduced-motion`: the whole effects layer (`effects.js`) is skipped, the hero network renders as a single still frame, the running band stops, scroll-linked pieces show in their final state and the custom cursor is off.
 - No third-party scripts or fonts on the public site. The only external script is Decap CMS on `/admin`, pinned to an exact version with an integrity hash.
 
 ## Placeholders to avoid
