@@ -186,12 +186,27 @@
           const body = el('div', 'pbody');
           if (p.category) body.appendChild(el('p', 'cat', p.category));
           body.appendChild(el('h3', '', p.title));
+          const meta = [p.client && p.client !== p.title ? p.client : '', p.location].filter(Boolean).join(' · ');
+          if (meta) body.appendChild(el('p', 'pmeta', meta));
           if (p.description) body.appendChild(el('p', '', p.description));
+          const highlights = (p.highlights || []).filter(Boolean);
+          if (highlights.length) {
+            const ul = el('ul', 'phigh');
+            highlights.forEach((h) => ul.appendChild(el('li', '', typeof h === 'string' ? h : h.item)));
+            body.appendChild(ul);
+          }
+          const stack = (p.built_with || []).filter(Boolean);
+          if (stack.length) {
+            const wrap = el('div', 'pstack');
+            wrap.appendChild(el('span', 'pstack-label', 'Built with'));
+            stack.forEach((t) => wrap.appendChild(el('span', 'ptag', typeof t === 'string' ? t : t.tool)));
+            body.appendChild(wrap);
+          }
           const href = p.link ? safeUrl(p.link) : '';
           if (href) {
-            const a = el('a', 'more', 'View project');
+            const a = el('a', 'more', 'Visit the live site');
             a.href = href; a.target = '_blank'; a.rel = 'noopener';
-            a.setAttribute('aria-label', `View project: ${p.title}`);
+            a.setAttribute('aria-label', `Visit the live site: ${p.title} (opens in a new tab)`);
             body.appendChild(a);
           }
           if (src) card.appendChild(thumb);

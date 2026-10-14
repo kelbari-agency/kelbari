@@ -356,7 +356,7 @@ section { padding: clamp(80px, 10vw, 144px) 0; }
 
 /* ---------- Work ---------- */
 .work { padding-top: clamp(64px, 8vw, 112px); }
-.projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px; }
+.projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 16px; align-items: stretch; }
 .projects[hidden], .empty[hidden] { display: none; }
 .project { display: flex; flex-direction: column; padding: 10px; border-radius: var(--r-lg); background: var(--white); box-shadow: inset 0 0 0 1px var(--line); transition: transform .35s var(--ease), box-shadow .35s; }
 .project:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--line), 0 24px 40px -24px rgba(18, 19, 59, .35); }
@@ -368,6 +368,14 @@ section { padding: clamp(80px, 10vw, 144px) 0; }
 .project h3 { font-size: 26px; }
 .project p { font-size: 15px; line-height: 1.55; color: var(--slate); }
 .project .more { margin-top: auto; padding-top: 8px; font-weight: 600; font-size: 15px; color: var(--cobalt); text-underline-offset: 4px; }
+.project .pmeta { margin-top: -4px; font-size: 14px; font-weight: 500; color: var(--slate); }
+.project .phigh { display: grid; gap: 8px; margin: 4px 0 2px; }
+.project .phigh li { position: relative; padding-left: 18px; font-size: 14.5px; line-height: 1.5; color: var(--ink); }
+.project .phigh li::before { content: ""; position: absolute; left: 2px; top: .58em; width: 7px; height: 7px; border-radius: 50%; background: var(--cobalt); }
+.project .pstack { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.project .pstack-label { margin-right: 4px; font-size: 13px; color: var(--slate); }
+.project .ptag { padding: 5px 10px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line); font-size: 12.5px; font-weight: 500; color: var(--ink); }
+.project .more { padding-top: 14px; }
 
 .empty {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: center;

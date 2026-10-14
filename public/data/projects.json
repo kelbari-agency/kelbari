@@ -1,3 +1,52 @@
 {
-  "projects": []
+  "projects": [
+    {
+      "title": "Mian Art Store",
+      "category": "Web development",
+      "client": "Mian Art Store",
+      "location": "Bahawalpur, Pakistan",
+      "description": "An online shop for a stationery and art-supply store beside Islamia University. Artists, students and offices can browse paints, canvases, school and office supplies by category or by brand, and order for delivery anywhere in Pakistan.",
+      "highlights": [
+        "Full catalogue by category and by brand, from Deer and UHU to Keep Smiling",
+        "Product variants, sale prices, deals and ready-made bundles",
+        "Search, wishlist, compare, quick view and customer accounts",
+        "Cash on delivery, with free delivery on orders over Rs. 3,000"
+      ],
+      "built_with": ["WordPress", "WooCommerce"],
+      "image": "/images/uploads/mian-art-store.jpg",
+      "link": "https://mianartstore.com"
+    },
+    {
+      "title": "Barrientos Construction",
+      "category": "Web development",
+      "client": "Barrientos Construction LLC",
+      "location": "United States",
+      "description": "A lead-generation site for a licensed residential and commercial contractor. It lays out more than 25 services, from kitchen remodels to roofing and HVAC, shows recent projects and client reviews, and turns visitors into estimate requests.",
+      "highlights": [
+        "Service pages for homeowners, landlords, investors and commercial clients",
+        "Free-estimate and callback forms with a service picker",
+        "Project gallery with filters, testimonials and a blog",
+        "Vendor registration and a language switcher"
+      ],
+      "built_with": ["WordPress", "Elementor"],
+      "image": "/images/uploads/barrientos-construction.jpg",
+      "link": "https://barrientosconstructionllc.com"
+    },
+    {
+      "title": "FIXMYIMEI",
+      "category": "Web development",
+      "client": "FIXMYIMEI",
+      "location": "United States",
+      "description": "An online store for remote phone services: IMEI repair, carrier unlocks, FRP and MDM removal and Samsung region unlocks. Customers find their brand and model, order online and the work is done remotely.",
+      "highlights": [
+        "Service catalogue by brand and model: Samsung, Google Pixel, Apple, Motorola and Vivo",
+        "Home page with a promotional slider, popular categories and best offers",
+        "Cart, checkout, customer accounts, wishlist and compare",
+        "Product pages that explain each service in plain terms"
+      ],
+      "built_with": ["WordPress", "WooCommerce", "Slider Revolution"],
+      "image": "/images/uploads/fixmyimei.jpg",
+      "link": "https://fixmyimei.com"
+    }
+  ]
 }

@@ -49,10 +49,24 @@ collections:
                   - Digital marketing
                   - Graphic design
                   - Full brand system
+              - { label: Client, name: client, widget: string, required: false }
+              - { label: Location, name: location, widget: string, required: false, hint: "City and country, e.g. Bahawalpur, Pakistan" }
               - label: Description
                 name: description
                 widget: text
                 hint: "Two or three sentences: what you made, and what changed for the client."
+              - label: What we built
+                name: highlights
+                widget: list
+                required: false
+                hint: "Three or four short points. One feature per line."
+                field: { label: Point, name: item, widget: string }
+              - label: Built with
+                name: built_with
+                widget: list
+                required: false
+                hint: "Tools and platforms, e.g. WordPress, WooCommerce"
+                field: { label: Tool, name: tool, widget: string }
               - label: Cover image
                 name: image
                 widget: image
@@ -62,5 +76,5 @@ collections:
                 name: link
                 widget: string
                 required: false
-                hint: "Optional. A full address starting with https://"
+                hint: "Optional. The live site, starting with https://"
                 pattern: ["^https?://.+", "Start the address with https://"]
