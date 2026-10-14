@@ -25,10 +25,10 @@
   svg.append(pulses, edge, ring, dot);
 
   const R_REST = 15, R_HOVER = 22, R_PRESS = 10, DOT = 4, PAD = 7, MAGNET = 0.2, MAGNET_MAX = 8;
-  const SNAP = '.btn, .nav > a, .wa, a.ch, .brand, .menu-btn, .project, .f-col a, .f-up, .f-brand';
+  const SNAP = '.btn:not(.pbtn), .filter, .nav > a, .wa, a.ch, .brand, .menu-btn, .project, .f-col a, .f-up, .f-brand';
   const INTERACTIVE = 'a, button, select, summary, label, [role="button"], [tabindex]:not([tabindex="-1"])';
   const TEXT = 'input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]), textarea, [contenteditable="true"]';
-  const MAGNETIC = '.btn, .wa';
+  const MAGNETIC = '.btn:not(.pbtn), .wa';
   // light/dark is decided by the nearest surface, so a white card inside a dark section reads as light
   const SURFACE = '.on-dark, .form-card, .stat-haze, .stat-signal, .wa';
   const isDark = (t) => { const z = t && t.closest(SURFACE); return !!z && z.matches('.on-dark, .wa'); };

@@ -204,15 +204,43 @@
           }
           const href = p.link ? safeUrl(p.link) : '';
           if (href) {
-            const a = el('a', 'more', 'Visit the live site');
+            // One real link (the button). Its ::after stretches over the card, so the whole card is clickable.
+            const live = !/seeratali\.netlify\.app/.test(href);
+            const label = live ? 'View site' : 'View project';
+            const a = el('a', 'btn btn-cobalt pbtn');
             a.href = href; a.target = '_blank'; a.rel = 'noopener';
-            a.setAttribute('aria-label', `Visit the live site: ${p.title} (opens in a new tab)`);
+            a.setAttribute('aria-label', `${label}: ${p.title} (opens in a new tab)`);
+            a.append(el('span', '', label));
+            a.insertAdjacentHTML('beforeend', '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>');
             body.appendChild(a);
+            card.classList.add('is-link');
           }
+          card.dataset.cat = p.category || '';
           if (src) card.appendChild(thumb);
           card.appendChild(body);
           grid.appendChild(card);
         });
+
+        // Category filter chips (only categories that have projects)
+        const filters = $('[data-filters]');
+        const cats = [...new Set(items.map((p) => p.category).filter(Boolean))];
+        if (filters && cats.length > 1) {
+          const cards = [...grid.children];
+          const chips = ['All', ...cats].map((c) => {
+            const b = el('button', 'filter', c);
+            b.type = 'button';
+            const n = c === 'All' ? cards.length : cards.filter((k) => k.dataset.cat === c).length;
+            b.append(el('span', 'count', String(n)));
+            b.setAttribute('aria-pressed', String(c === 'All'));
+            b.addEventListener('click', () => {
+              chips.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+              cards.forEach((k) => { k.hidden = !(c === 'All' || k.dataset.cat === c); });
+            });
+            filters.appendChild(b);
+            return b;
+          });
+          filters.hidden = false;
+        }
         grid.hidden = false;
         empty.hidden = true;
       })

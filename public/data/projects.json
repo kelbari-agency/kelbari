@@ -78,6 +78,124 @@
       ],
       "image": "/images/uploads/fixmyimei.jpg",
       "link": "https://fixmyimei.com"
+    },
+    {
+      "title": "FanCourt",
+      "category": "Web development",
+      "description": "A financial advisory website designed and built from scratch: fully responsive and pixel-sharp on every screen.",
+      "highlights": [
+        "Custom design, no template",
+        "Responsive layouts from phone to desktop"
+      ],
+      "built_with": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "image": "/images/uploads/fancourt.jpg",
+      "link": "https://seeratali.netlify.app/"
+    },
+    {
+      "title": "MAIVA",
+      "category": "Web development",
+      "description": "An AI company's investor pitch deck and website: decks and infographics that make the product clear, plus front-end polish on a responsive site.",
+      "highlights": [
+        "Investor-ready pitch decks and infographics",
+        "Responsive website front end"
+      ],
+      "built_with": [
+        "PowerPoint",
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "image": "/images/uploads/maiva.jpg",
+      "link": "https://seeratali.netlify.app/"
+    },
+    {
+      "title": "BabyResume",
+      "category": "Graphic design",
+      "description": "A mobile app redesign with a cleaner layout, better usability and a set of new UI components.",
+      "highlights": [
+        "Simplified screens and clearer hierarchy",
+        "New, reusable UI components"
+      ],
+      "built_with": [
+        "Figma"
+      ],
+      "image": "/images/uploads/babyresume.jpg",
+      "link": "https://seeratali.netlify.app/"
+    },
+    {
+      "title": "PMHOA Pro",
+      "category": "Graphic design",
+      "description": "A webinar deck overhaul: clear structure, real hierarchy and zero clutter, so the talk carries the message.",
+      "highlights": [
+        "Restructured story and slide flow",
+        "Consistent type and layout system"
+      ],
+      "built_with": [
+        "PowerPoint"
+      ],
+      "image": "/images/uploads/pmhoa-pro.jpg",
+      "link": "https://seeratali.netlify.app/"
+    },
+    {
+      "title": "Apartment Maid",
+      "category": "Digital marketing",
+      "description": "Social and email campaigns that landlords actually open: Instagram and LinkedIn content, captions and scheduling, plus marketing emails. We also helped shape the brand and logo.",
+      "highlights": [
+        "Instagram and LinkedIn content with captions and scheduling",
+        "Marketing emails for landlords",
+        "Support on branding and the logo"
+      ],
+      "image": "/images/uploads/apartment-maid.jpg",
+      "link": "https://seeratali.netlify.app/"
+    },
+    {
+      "title": "Brighter Strides ABA",
+      "category": "Digital marketing",
+      "description": "Monthly social content for a children's ABA therapy centre: warm, playful and on brand.",
+      "highlights": [
+        "Monthly content calendars",
+        "Event graphics and community posts"
+      ],
+      "image": "/images/uploads/brighter-strides.jpg",
+      "link": "https://seeratali.netlify.app/"
+    },
+    {
+      "title": "QuizPur",
+      "category": "Digital marketing",
+      "description": "Award-day recaps and campaign posts for a student quiz platform, alongside website and UI improvements.",
+      "highlights": [
+        "Award-day recap posts and campaigns",
+        "Website and UI improvements"
+      ],
+      "image": "/images/uploads/quizpur.jpg",
+      "link": "https://seeratali.netlify.app/"
+    },
+    {
+      "title": "Qayas Design Studio",
+      "category": "Graphic design",
+      "description": "Flyers, brochures and social content for a design studio's clients, plus LinkedIn management for international accounts.",
+      "highlights": [
+        "Flyers, brochures and social posts",
+        "LinkedIn management for international clients",
+        "UI mockups"
+      ],
+      "image": "/images/uploads/qayas-design-studio.jpg",
+      "link": "https://seeratali.netlify.app/"
+    },
+    {
+      "title": "Tiernan Travels",
+      "category": "Digital marketing",
+      "location": "UK and Ireland",
+      "description": "Scroll-stopping social media sets for a travel specialist covering the UK and Ireland.",
+      "highlights": [
+        "Social media graphic sets for destinations and offers"
+      ],
+      "image": "/images/uploads/tiernan-travels.jpg",
+      "link": "https://seeratali.netlify.app/"
     }
   ]
 }
