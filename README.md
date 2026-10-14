@@ -2,18 +2,22 @@
 
 The marketing site for [Kelbari](https://kelbari.net): web development, digital marketing (including social media marketing) and graphic design, sold as one connected system.
 
-Plain HTML, CSS and JavaScript. No build step, no framework. Self-hosted fonts (Bricolage Grotesque, Geist and Geist Mono).
+Plain HTML, CSS and JavaScript, no framework. A small build step (`npm run build`) optimises it for production. Self-hosted fonts (Bricolage Grotesque, Geist and Geist Mono).
 
 ## Structure
 
 ```
 .
-├── netlify.toml              Netlify settings: publish folder, security headers, font caching
+├── netlify.toml              Netlify settings: build command, security headers, caching
+├── package.json              Build dependencies (esbuild, sharp, html-minifier-terser)
 ├── README.md
 ├── tools/
+│   ├── build.mjs             The production build: public/ → dist/
+│   ├── content/services.json Copy for the three service pages
 │   ├── make-brand-assets.py  Regenerates the favicon set, app icons and the social preview image
 │   └── og-template.html      Template for the social preview image (1200 × 630)
-└── public/                   Everything in here is published. Nothing outside it is.
+├── dist/                     Build output (not committed). This is what Netlify publishes.
+└── public/                   The source. Edit here; the CMS writes here too.
     ├── index.html            The single-page site
     ├── 404.html              Not-found page
     ├── admin/                Decap CMS: index.html (loader) and config.yml (fields)
@@ -33,10 +37,32 @@ Plain HTML, CSS and JavaScript. No build step, no framework. Self-hosted fonts (
 
 ## Preview locally
 
+Quick look at the source (no build needed):
+
 ```bash
 python3 -m http.server 8000 -d public
 # open http://localhost:8000
 ```
+
+The production version, exactly as Netlify builds it:
+
+```bash
+npm install
+npm run build
+npx serve dist
+```
+
+## What the build does
+
+`tools/build.mjs` runs on every Netlify deploy (including CMS edits):
+
+- **Responsive images:** WebP copies of every project cover (480, 800, 1200 px wide) and gallery image (800 px), served with `srcset` so phones download small files.
+- **Crawlable work:** the project cards are written into the home page HTML (search engines see them, nothing shifts while loading), and the project data is embedded so no extra request is needed.
+- **Generated pages:** `/web-development/`, `/digital-marketing/` and `/graphic-design/` (copy in `tools/content/services.json`), plus `/work/<slug>/` for every project with a gallery. Each has its own title, description, canonical URL, social tags, breadcrumbs and structured data (Service, FAQPage, CreativeWork, BreadcrumbList).
+- **Sitemap:** `sitemap.xml` lists every page and its images.
+- **Speed:** the four scripts become one minified, fingerprinted file cached for a year; the CSS is minified and inlined, so nothing blocks the first paint; every HTML page is minified.
+
+On the home page, clicking a gallery project opens it in the on-page viewer and the address bar shows `/work/<slug>/`. Opening that address directly (or from Google) loads the full standalone page.
 
 Everything works locally, including the contact form: both buttons open the visitor's own app (WhatsApp or their mail app) with the brief pre-filled, and nothing is sent until they press send there.
 
@@ -84,7 +110,7 @@ The filter buttons above the cards are built from the categories in use.
 
 - Every push or merge to `main` deploys to production at https://kelbari.net. Work on a branch and open a pull request to get a preview first.
 - Every pull request gets its own deploy preview URL, posted on the pull request.
-- `netlify.toml` publishes the `public/` folder with no build command.
+- `netlify.toml` runs `npm run build` and publishes `dist/`. Fingerprinted scripts, fonts and gallery images are cached for a year; uploads and brand files for 30 days.
 - Netlify DNS manages `kelbari.net`. `www.kelbari.net` redirects to the apex domain. Do not add or remove DNS records for email or anything else without checking with the owners first.
 
 ## One-time setup in Netlify (owner only)
@@ -116,6 +142,16 @@ The favicon set keeps the original guide's sizing (32 px and 16 px at 56% symbol
 pip install pillow playwright && playwright install chromium
 python3 tools/make-brand-assets.py
 ```
+
+## SEO checklist for the owners
+
+These need your accounts, so they can't be done from the code:
+
+1. **Google Search Console:** add `kelbari.net` as a Domain property (verify with a TXT record in Netlify DNS; that's the only DNS change it needs), then submit `https://kelbari.net/sitemap.xml`.
+2. **Bing Webmaster Tools:** import the site from Search Console.
+3. **Google Business Profile:** create one for Kelbari (a service-area business can hide its street address).
+4. **Directory listings:** Clutch, GoodFirms, DesignRush and TechBehemoths are where agency buyers compare firms; list Kelbari on each with a link to kelbari.net.
+5. **LinkedIn company page:** link to kelbari.net, and share each new project page when it goes up.
 
 ## Accessibility and performance
 

@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kelbari — Web development, digital marketing, graphic design</title>
-<meta name="description" content="Kelbari builds and runs the digital side of a business — web development, digital marketing and graphic design — as one connected system.">
+<title>Kelbari — Web Development, Digital Marketing &amp; Design Agency</title>
+<meta name="description" content="Kelbari is a web development, digital marketing and graphic design agency. One team builds your website, runs your social media and designs your brand.">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://kelbari.net/">
 <meta name="theme-color" content="#F8F8FC">
 
@@ -36,34 +37,57 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Kelbari",
-  "url": "https://kelbari.net/",
-  "logo": "https://kelbari.net/assets/brand/icon-512.png",
-  "description": "Kelbari builds and runs the digital side of a business — web development, digital marketing (including social media marketing) and graphic design — as one connected system.",
-  "email": "kelbariofficial@gmail.com",
-  "telephone": "+92-301-9233246",
-  "founder": [
-    { "@type": "Person", "name": "Saqlain Akbar", "jobTitle": "Founder" },
-    { "@type": "Person", "name": "Hafiz Ahmad", "jobTitle": "Founder" }
-  ],
-  "contactPoint": [
+  "@graph": [
     {
-      "@type": "ContactPoint",
-      "contactType": "sales",
+      "@type": "Organization",
+      "@id": "https://kelbari.net/#org",
+      "name": "Kelbari",
+      "url": "https://kelbari.net/",
+      "logo": { "@type": "ImageObject", "url": "https://kelbari.net/assets/brand/icon-512.png", "width": 512, "height": 512 },
+      "image": "https://kelbari.net/assets/og-image.png",
+      "description": "Kelbari is a web development, digital marketing and graphic design agency. One team builds the website, runs the social media and designs the brand.",
       "email": "kelbariofficial@gmail.com",
       "telephone": "+92-301-9233246",
-      "hoursAvailable": {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-        "opens": "00:00",
-        "closes": "23:59"
+      "address": { "@type": "PostalAddress", "addressCountry": "PK" },
+      "areaServed": "Worldwide",
+      "knowsAbout": ["Web development", "E-commerce websites", "Digital marketing", "Social media marketing", "Graphic design", "Brand identity", "Search engine optimisation"],
+      "founder": [
+        { "@type": "Person", "name": "Saqlain Akbar", "jobTitle": "Founder" },
+        { "@type": "Person", "name": "Hafiz Ahmad", "jobTitle": "Founder" }
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "sales",
+          "email": "kelbariofficial@gmail.com",
+          "telephone": "+92-301-9233246",
+          "availableLanguage": ["English", "Urdu"],
+          "hoursAvailable": {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "opens": "00:00",
+            "closes": "23:59"
+          }
+        },
+        { "@type": "ContactPoint", "contactType": "customer support", "email": "support.kelbari@gmail.com" }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Kelbari services",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Web development", "url": "https://kelbari.net/web-development/" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Digital marketing", "url": "https://kelbari.net/digital-marketing/" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Graphic design", "url": "https://kelbari.net/graphic-design/" } }
+        ]
       }
     },
     {
-      "@type": "ContactPoint",
-      "contactType": "customer support",
-      "email": "support.kelbari@gmail.com"
+      "@type": "WebSite",
+      "@id": "https://kelbari.net/#website",
+      "url": "https://kelbari.net/",
+      "name": "Kelbari",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://kelbari.net/#org" }
     }
   ]
 }
@@ -176,6 +200,7 @@
               <li>Custom dashboards and tools</li>
               <li>Performance and SEO groundwork</li>
             </ul>
+            <a class="p-more" href="/web-development/">Web development services<svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
         </article>
 
@@ -193,6 +218,7 @@
               <li>Community management</li>
               <li>Monthly performance reporting</li>
             </ul>
+            <a class="p-more" href="/digital-marketing/">Digital marketing services<svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
         </article>
 
@@ -210,6 +236,7 @@
               <li>Campaign and social artwork</li>
               <li>Print and packaging collateral</li>
             </ul>
+            <a class="p-more" href="/graphic-design/">Graphic design services<svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
         </article>
       </div>
@@ -397,9 +424,9 @@
       </nav>
       <div class="f-col">
         <p class="f-h">Services</p>
-        <p>Web development</p>
-        <p>Digital marketing</p>
-        <p>Graphic design</p>
+        <a href="/web-development/">Web development</a>
+        <a href="/digital-marketing/">Digital marketing</a>
+        <a href="/graphic-design/">Graphic design</a>
       </div>
       <div class="f-col">
         <p class="f-h">Contact</p>

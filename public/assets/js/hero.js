@@ -31,7 +31,7 @@
   let W = 0, H = 0, dpr = 1;
   let nodes = [], seeds = [], keepOut = null, link = 140, soft = 1;
   let t0 = performance.now();
-  let raf = 0, inView = true;
+  let raf = 0, inView = true, booted = false;
   const pointer = { x: 0, y: 0, active: false, fade: 0, timer: 0 };
 
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -190,7 +190,7 @@
     draw();
     if (inView && !document.hidden) raf = requestAnimationFrame(frame);
   }
-  function start() { if (!raf && !reduceQuery.matches && inView && !document.hidden) raf = requestAnimationFrame(frame); }
+  function start() { if (booted && !raf && !reduceQuery.matches && inView && !document.hidden) raf = requestAnimationFrame(frame); }
 
   function renderStatic() {
     layout(); step(performance.now(), true); draw();
@@ -218,15 +218,23 @@
   let resizeTimer = 0;
   new ResizeObserver(() => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { rebuild(); start(); }, 120);
+    resizeTimer = setTimeout(() => { if (booted) { rebuild(); start(); } }, 120);
   }).observe(hero);
   new IntersectionObserver(([en]) => { inView = en.isIntersecting; if (inView) start(); }, { threshold: 0 }).observe(hero);
   document.addEventListener('visibilitychange', start);
   reduceQuery.addEventListener('change', () => {
+    if (!booted) return;
     if (reduceQuery.matches) { cancelAnimationFrame(raf); raf = 0; renderStatic(); }
     else { t0 = performance.now(); layout(); start(); }
   });
 
-  layout();
-  if (reduceQuery.matches) { step(0, true); draw(); } else { t0 = performance.now(); start(); }
+  // Start once the page has finished loading, so the network never competes with first paint.
+  const boot = () => {
+    booted = true;
+    layout();
+    if (reduceQuery.matches) { step(0, true); draw(); } else { t0 = performance.now(); start(); }
+  };
+  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 200));
+  if (document.readyState === 'complete') idle(boot, { timeout: 1200 });
+  else window.addEventListener('load', () => idle(boot, { timeout: 1200 }), { once: true });
 })();

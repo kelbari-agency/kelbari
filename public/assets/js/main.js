@@ -149,7 +149,11 @@
     ['top', ...byId.keys()].forEach((id) => { const s = document.getElementById(id); if (s) io.observe(s); });
   })();
 
-  /* ---------- Selected work: reads /data/projects.json ---------- */
+  /* ---------- Selected work ----------
+     The build step renders the cards into the HTML (crawlable, no layout shift) and embeds the
+     project data as JSON. Without the build (plain local preview) this reads /data/projects.json
+     and renders the cards itself. Gallery projects open in an on-page viewer at /work/<slug>/;
+     the same address is a full standalone page for search engines and direct visits. */
   (() => {
     const grid = $('[data-projects]');
     const empty = $('[data-empty]');
@@ -167,15 +171,100 @@
       if (text) n.textContent = text;
       return n;
     };
+    const ARROW_OUT = '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const ARROW = '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const slugOf = (p) => (/^[a-z0-9-]+$/.test(p.slug || '') ? p.slug : '');
+    const galleryOf = (p) => (p.gallery || []).filter((g) => g && g.image && safeUrl(g.image));
 
+    function buildCard(p) {
+      const card = el('article', 'project');
+      const src = p.image ? safeUrl(p.image) : '';
+      const body = el('div', 'pbody');
+      if (p.category) body.appendChild(el('p', 'cat', p.category));
+      body.appendChild(el('h3', '', p.title));
+      const meta = [p.client && p.client !== p.title ? p.client : '', p.location].filter(Boolean).join(' · ');
+      if (meta) body.appendChild(el('p', 'pmeta', meta));
+      if (p.description) body.appendChild(el('p', '', p.description));
+      const highlights = (p.highlights || []).filter(Boolean);
+      if (highlights.length) {
+        const ul = el('ul', 'phigh');
+        highlights.forEach((h) => ul.appendChild(el('li', '', typeof h === 'string' ? h : h.item)));
+        body.appendChild(ul);
+      }
+      const stack = (p.built_with || []).filter(Boolean);
+      if (stack.length) {
+        const wrap = el('div', 'pstack');
+        wrap.appendChild(el('span', 'pstack-label', 'Built with'));
+        stack.forEach((t) => wrap.appendChild(el('span', 'ptag', typeof t === 'string' ? t : t.tool)));
+        body.appendChild(wrap);
+      }
+      const slug = slugOf(p), href = p.link ? safeUrl(p.link) : '';
+      // One real link (the button). Its ::after stretches over the card, so the whole card is clickable.
+      if (galleryOf(p).length && slug) {
+        const a = el('a', 'btn btn-cobalt pbtn');
+        a.href = `/work/${slug}/`;
+        a.setAttribute('aria-label', `View project: ${p.title}`);
+        a.append(el('span', '', 'View project'));
+        a.insertAdjacentHTML('beforeend', ARROW);
+        body.appendChild(a); card.classList.add('is-link');
+      } else if (href) {
+        const a = el('a', 'btn btn-cobalt pbtn');
+        a.href = href; a.target = '_blank'; a.rel = 'noopener';
+        a.setAttribute('aria-label', `View site: ${p.title} (opens in a new tab)`);
+        a.append(el('span', '', 'View site'));
+        a.insertAdjacentHTML('beforeend', ARROW_OUT);
+        body.appendChild(a); card.classList.add('is-link');
+      }
+      card.dataset.cat = p.category || '';
+      if (src) {
+        const thumb = el('div', 'thumb');
+        const img = el('img');
+        img.src = src; img.alt = `${p.title} project`; img.loading = 'lazy'; img.decoding = 'async';
+        img.width = 1600; img.height = 1000;
+        if (p.image_srcset) { img.srcset = p.image_srcset; img.sizes = '(max-width: 760px) calc(100vw - 52px), (max-width: 1180px) 45vw, 380px'; }
+        thumb.appendChild(img); card.appendChild(thumb);
+      }
+      card.appendChild(body);
+      return card;
+    }
 
-    /* Project viewer: opens a project's full gallery on this page at #work/<slug>. */
-    function setupViewer(list, safeUrl, el) {
+    function setupFilters(items) {
+      const filters = $('[data-filters]');
+      const cats = [...new Set(items.map((p) => p.category).filter(Boolean))];
+      if (!filters || cats.length < 2) return;
+      const cards = [...grid.children];
+      const chips = ['All', ...cats].map((c) => {
+        const b = el('button', 'filter', c);
+        b.type = 'button';
+        const n = c === 'All' ? cards.length : cards.filter((k) => k.dataset.cat === c).length;
+        b.append(el('span', 'count', String(n)));
+        b.setAttribute('aria-pressed', String(c === 'All'));
+        b.addEventListener('click', () => {
+          const apply = () => {
+            chips.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+            cards.forEach((k) => { k.hidden = !(c === 'All' || k.dataset.cat === c); });
+          };
+          // Cards glide to their new places where the browser supports view transitions
+          if (document.startViewTransition && !reduceQuery.matches) {
+            cards.forEach((k, i) => { k.style.viewTransitionName = `p${i}`; });
+            const vt = document.startViewTransition(apply);
+            vt.finished.finally(() => cards.forEach((k) => { k.style.viewTransitionName = ''; }));
+          } else apply();
+        });
+        filters.appendChild(b);
+        return b;
+      });
+      filters.hidden = false;
+    }
+
+    /* Project viewer: the full gallery in a dialog, at /work/<slug>/ in the address bar. */
+    function setupViewer(list) {
       const dlg = $('[data-viewer]');
       if (!dlg || !list.length || typeof dlg.showModal !== 'function') return;
       const q = (s) => dlg.querySelector(s);
       const bySlug = new Map(list.map((p) => [p.slug, p]));
-      let current = null, pushed = false;
+      const home = location.pathname;
+      let current = null, pushed = false, silent = false;
 
       function fill(p) {
         q('[data-v-cat]').textContent = p.category || '';
@@ -196,6 +285,7 @@
         p.gallery.forEach((g, i) => {
           const img = el('img');
           img.src = safeUrl(g.image);
+          if (g.srcset) { img.srcset = g.srcset; img.sizes = '(max-width: 1180px) 100vw, 1116px'; }
           if (g.width && g.height) { img.width = g.width; img.height = g.height; }
           img.alt = i === 0 ? `${p.title}: project showcase` : '';
           img.loading = i < 2 ? 'eager' : 'lazy';
@@ -204,163 +294,98 @@
         });
         const next = list[(list.indexOf(p) + 1) % list.length];
         const nx = q('[data-v-next]');
-        nx.href = `#work/${next.slug}`;
+        nx.href = `/work/${next.slug}/`;
         nx.replaceChildren(el('span', '', `Next: ${next.title}`));
-        nx.insertAdjacentHTML('beforeend', '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+        nx.insertAdjacentHTML('beforeend', ARROW);
         q('[data-v-scroll]').scrollTop = 0;
       }
 
       function open(p) {
         current = p; fill(p);
+        document.title = `${p.title} — Kelbari`;
         if (!dlg.open) {
           dlg.showModal();
           document.documentElement.classList.add('viewer-open');
         }
         q('[data-v-close]').focus({ preventScroll: true });
       }
-      function shut() {
-        if (!dlg.open) return;
-        dlg.close();
-      }
+      const baseTitle = document.title;
       dlg.addEventListener('close', () => {
         document.documentElement.classList.remove('viewer-open');
+        document.title = baseTitle;
         const was = current; current = null;
-        if (/^#work\//.test(location.hash)) {
+        if (!silent) {
           if (pushed) { pushed = false; history.back(); }
-          else history.replaceState(null, '', '#work');
+          else history.replaceState(null, '', `${home}#work`);
         }
-        // return focus to the card the visitor came from
-        if (was) {
-          const a = document.querySelector(`.project a[href="#work/${was.slug}"]`);
-          if (a) setTimeout(() => a.focus({ preventScroll: true }), 60); // after history.back() settles
+        silent = false;
+        if (was) { // return focus to the card the visitor came from
+          const a = document.querySelector(`.project a[href="/work/${was.slug}/"]`);
+          if (a) setTimeout(() => a.focus({ preventScroll: true }), 60);
         }
       });
-      q('[data-v-close]').addEventListener('click', shut);
-      // click on the dimmed backdrop closes
-      dlg.addEventListener('click', (e) => { if (e.target === dlg) shut(); });
-      // "Start a project" closes the viewer, then scrolls to the form
+      q('[data-v-close]').addEventListener('click', () => dlg.close());
+      dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); }); // backdrop
       q('[data-v-contact]').addEventListener('click', (e) => {
-        e.preventDefault(); pushed = false; dlg.close();
-        history.replaceState(null, '', '#contact');
-        const c = document.getElementById('contact'); if (c) c.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        e.preventDefault(); dlg.close();
+        setTimeout(() => {
+          const c = document.getElementById('contact');
+          if (c) c.scrollIntoView({ behavior: reduceQuery.matches ? 'auto' : 'smooth' });
+        }, 80);
       });
-      // Next project swaps in place without stacking history entries
       q('[data-v-next]').addEventListener('click', (e) => {
-        const p = bySlug.get(e.currentTarget.getAttribute('href').slice(6));
+        const m = e.currentTarget.getAttribute('href').match(/^\/work\/([a-z0-9-]+)\/$/);
+        const p = m && bySlug.get(m[1]);
         if (!p) return;
         e.preventDefault();
-        history.replaceState(null, '', `#work/${p.slug}`);
+        history.replaceState({ kviewer: p.slug }, '', `/work/${p.slug}/`);
         open(p);
       });
 
-      function route(fromClick) {
-        const m = location.hash.match(/^#work\/([a-z0-9-]+)$/);
+      // Open from the cards (plain left click only; modified clicks open the real page)
+      grid.addEventListener('click', (e) => {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const a = e.target.closest('a[href^="/work/"]');
+        const m = a && a.getAttribute('href').match(/^\/work\/([a-z0-9-]+)\/$/);
         const p = m && bySlug.get(m[1]);
-        if (p) { if (fromClick) pushed = true; open(p); }
-        else if (dlg.open) { pushed = false; dlg.close(); }
+        if (!p) return;
+        e.preventDefault();
+        history.pushState({ kviewer: p.slug }, '', `/work/${p.slug}/`);
+        pushed = true;
+        open(p);
+      });
+      window.addEventListener('popstate', (e) => {
+        const p = e.state && e.state.kviewer && bySlug.get(e.state.kviewer);
+        if (p) { pushed = false; open(p); }
+        else if (dlg.open) { pushed = false; silent = true; dlg.close(); }
+      });
+      // Old-style links (#work/<slug>) still open the project
+      const legacy = location.hash.match(/^#work\/([a-z0-9-]+)$/);
+      if (legacy && bySlug.get(legacy[1])) {
+        history.replaceState({ kviewer: legacy[1] }, '', `/work/${legacy[1]}/`);
+        open(bySlug.get(legacy[1]));
       }
-      window.addEventListener('hashchange', () => route(true));
-      route(false);
     }
 
+    function start(data) {
+      const list = (Array.isArray(data) ? data : data && data.projects) || [];
+      const items = list.filter((p) => p && p.title);
+      if (!items.length) return;
+      if (!grid.querySelector('[data-prerendered]')) items.forEach((p) => grid.appendChild(buildCard(p)));
+      setupFilters(items);
+      grid.hidden = false;
+      empty.hidden = true;
+      setupViewer(items.filter((p) => slugOf(p) && galleryOf(p).length).map((p) => ({ ...p, slug: slugOf(p), gallery: galleryOf(p) })));
+      document.dispatchEvent(new CustomEvent('kelbari:projects'));
+    }
+
+    const inline = document.getElementById('projects-data');
+    if (inline) {
+      try { start(JSON.parse(inline.textContent)); return; } catch (_) { /* fall back to fetching */ }
+    }
     fetch('/data/projects.json', { cache: 'no-cache' })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('no data'))))
-      .then((data) => {
-        const list = (Array.isArray(data) ? data : data && data.projects) || [];
-        const items = list.filter((p) => p && p.title);
-        if (!items.length) return;
-        const viewerItems = [];
-        items.forEach((p) => {
-          const card = el('article', 'project');
-          const thumb = el('div', 'thumb');
-          const src = p.image ? safeUrl(p.image) : '';
-          if (src) {
-            const img = el('img');
-            img.src = src; img.alt = p.title; img.loading = 'lazy';
-            thumb.appendChild(img);
-          }
-          const body = el('div', 'pbody');
-          if (p.category) body.appendChild(el('p', 'cat', p.category));
-          body.appendChild(el('h3', '', p.title));
-          const meta = [p.client && p.client !== p.title ? p.client : '', p.location].filter(Boolean).join(' · ');
-          if (meta) body.appendChild(el('p', 'pmeta', meta));
-          if (p.description) body.appendChild(el('p', '', p.description));
-          const highlights = (p.highlights || []).filter(Boolean);
-          if (highlights.length) {
-            const ul = el('ul', 'phigh');
-            highlights.forEach((h) => ul.appendChild(el('li', '', typeof h === 'string' ? h : h.item)));
-            body.appendChild(ul);
-          }
-          const stack = (p.built_with || []).filter(Boolean);
-          if (stack.length) {
-            const wrap = el('div', 'pstack');
-            wrap.appendChild(el('span', 'pstack-label', 'Built with'));
-            stack.forEach((t) => wrap.appendChild(el('span', 'ptag', typeof t === 'string' ? t : t.tool)));
-            body.appendChild(wrap);
-          }
-          const gallery = (p.gallery || []).filter((g) => g && g.image && safeUrl(g.image));
-          const slug = /^[a-z0-9-]+$/.test(p.slug || '') ? p.slug : '';
-          const href = p.link ? safeUrl(p.link) : '';
-          const arrow = '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-          const plus = '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-          // One real link (the button). Its ::after stretches over the card, so the whole card is clickable.
-          if (gallery.length && slug) {
-            const a = el('a', 'btn btn-cobalt pbtn');
-            a.href = `#work/${slug}`;
-            a.setAttribute('aria-label', `View project: ${p.title}`);
-            a.append(el('span', '', 'View project'));
-            a.insertAdjacentHTML('beforeend', plus);
-            body.appendChild(a);
-            card.classList.add('is-link');
-            viewerItems.push({ ...p, slug, gallery });
-          } else if (href) {
-            const a = el('a', 'btn btn-cobalt pbtn');
-            a.href = href; a.target = '_blank'; a.rel = 'noopener';
-            a.setAttribute('aria-label', `View site: ${p.title} (opens in a new tab)`);
-            a.append(el('span', '', 'View site'));
-            a.insertAdjacentHTML('beforeend', arrow);
-            body.appendChild(a);
-            card.classList.add('is-link');
-          }
-          card.dataset.cat = p.category || '';
-          if (src) card.appendChild(thumb);
-          card.appendChild(body);
-          grid.appendChild(card);
-        });
-
-        // Category filter chips (only categories that have projects)
-        const filters = $('[data-filters]');
-        const cats = [...new Set(items.map((p) => p.category).filter(Boolean))];
-        if (filters && cats.length > 1) {
-          const cards = [...grid.children];
-          const chips = ['All', ...cats].map((c) => {
-            const b = el('button', 'filter', c);
-            b.type = 'button';
-            const n = c === 'All' ? cards.length : cards.filter((k) => k.dataset.cat === c).length;
-            b.append(el('span', 'count', String(n)));
-            b.setAttribute('aria-pressed', String(c === 'All'));
-            b.addEventListener('click', () => {
-              const apply = () => {
-                chips.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-                cards.forEach((k) => { k.hidden = !(c === 'All' || k.dataset.cat === c); });
-              };
-              // Cards glide to their new places where the browser supports view transitions
-              if (document.startViewTransition && !reduceQuery.matches) {
-                cards.forEach((k, i) => { k.style.viewTransitionName = `p${i}`; });
-                const vt = document.startViewTransition(apply);
-                vt.finished.finally(() => cards.forEach((k) => { k.style.viewTransitionName = ''; }));
-              } else apply();
-            });
-            filters.appendChild(b);
-            return b;
-          });
-          filters.hidden = false;
-        }
-        grid.hidden = false;
-        empty.hidden = true;
-        setupViewer(viewerItems, safeUrl, el);
-        document.dispatchEvent(new CustomEvent('kelbari:projects'));
-      })
+      .then(start)
       .catch(() => { /* keep the "coming soon" state */ });
   })();
 
