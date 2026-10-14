@@ -1,6 +1,27 @@
 {
   "projects": [
     {
+      "title": "shapargullay",
+      "category": "Web development",
+      "client": "shapargullay",
+      "location": "Pakistan",
+      "description": "An event ticketing platform for Pakistan. People find concerts, qawwali, comedy, theatre and workshops by city or category, pay by card and get their ticket instantly. Organisers list and sell their own events, and every listing is checked by a person before it goes on sale.",
+      "highlights": [
+        "Events by city and category, from Lahore and Karachi to Multan and Peshawar",
+        "Card payments through Safepay, with the 4% service fee shown before you pay",
+        "Instant tickets with QR entry, emailed PDFs and Apple and Google Wallet passes",
+        "Ticket messages on WhatsApp, free transfers to friends and tools for organisers"
+      ],
+      "built_with": [
+        "Next.js",
+        "Netlify Functions",
+        "Safepay",
+        "WhatsApp Business API"
+      ],
+      "image": "/images/uploads/shapargullay.jpg",
+      "link": "https://shapargullay.com"
+    },
+    {
       "title": "Mian Art Store",
       "category": "Web development",
       "client": "Mian Art Store",
@@ -12,7 +33,10 @@
         "Search, wishlist, compare, quick view and customer accounts",
         "Cash on delivery, with free delivery on orders over Rs. 3,000"
       ],
-      "built_with": ["WordPress", "WooCommerce"],
+      "built_with": [
+        "WordPress",
+        "WooCommerce"
+      ],
       "image": "/images/uploads/mian-art-store.jpg",
       "link": "https://mianartstore.com"
     },
@@ -28,7 +52,10 @@
         "Project gallery with filters, testimonials and a blog",
         "Vendor registration and a language switcher"
       ],
-      "built_with": ["WordPress", "Elementor"],
+      "built_with": [
+        "WordPress",
+        "Elementor"
+      ],
       "image": "/images/uploads/barrientos-construction.jpg",
       "link": "https://barrientosconstructionllc.com"
     },
@@ -44,7 +71,11 @@
         "Cart, checkout, customer accounts, wishlist and compare",
         "Product pages that explain each service in plain terms"
       ],
-      "built_with": ["WordPress", "WooCommerce", "Slider Revolution"],
+      "built_with": [
+        "WordPress",
+        "WooCommerce",
+        "Slider Revolution"
+      ],
       "image": "/images/uploads/fixmyimei.jpg",
       "link": "https://fixmyimei.com"
     }
