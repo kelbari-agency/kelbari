@@ -9,7 +9,10 @@
 <link rel="canonical" href="https://kelbari.net/">
 <meta name="theme-color" content="#F8F8FC">
 
-<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" type="image/png" sizes="96x96" href="/assets/brand/favicon-96.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/brand/favicon-48.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/brand/favicon-16.png">
 <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png">
@@ -39,9 +42,12 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "Organization",
+      "@type": ["Organization", "ProfessionalService"],
       "@id": "https://kelbari.net/#org",
       "name": "Kelbari",
+      "alternateName": ["Kelbari Agency", "kelbari.net"],
+      "legalName": "Kelbari",
+      "slogan": "Sites, campaigns and design from one team.",
       "url": "https://kelbari.net/",
       "logo": { "@type": "ImageObject", "url": "https://kelbari.net/assets/brand/icon-512.png", "width": 512, "height": 512 },
       "image": "https://kelbari.net/assets/og-image.png",
@@ -49,6 +55,13 @@
       "email": "kelbariofficial@gmail.com",
       "telephone": "+92-301-9233246",
       "address": { "@type": "PostalAddress", "addressLocality": "Bahawalpur", "addressRegion": "Punjab", "addressCountry": "PK" },
+      "foundingLocation": { "@type": "Place", "name": "Bahawalpur, Punjab, Pakistan" },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        "opens": "00:00",
+        "closes": "23:59"
+      },
       "areaServed": [
         { "@type": "City", "name": "Bahawalpur" },
         { "@type": "Country", "name": "Pakistan" },
@@ -56,8 +69,8 @@
       ],
       "knowsAbout": ["Web development", "E-commerce websites", "Digital marketing", "Social media marketing", "Graphic design", "Brand identity", "Search engine optimisation"],
       "founder": [
-        { "@type": "Person", "name": "Saqlain Akbar", "jobTitle": "Founder" },
-        { "@type": "Person", "name": "Hafiz Ahmad", "jobTitle": "Founder" }
+        { "@type": "Person", "name": "Saqlain Akbar", "jobTitle": "Founder", "worksFor": { "@id": "https://kelbari.net/#org" } },
+        { "@type": "Person", "name": "Hafiz Ahmad", "jobTitle": "Founder", "worksFor": { "@id": "https://kelbari.net/#org" } }
       ],
       "contactPoint": [
         {
@@ -90,6 +103,8 @@
       "@id": "https://kelbari.net/#website",
       "url": "https://kelbari.net/",
       "name": "Kelbari",
+      "alternateName": ["Kelbari Agency", "kelbari.net"],
+      "description": "Kelbari is a web development, digital marketing and graphic design agency in Bahawalpur, Pakistan.",
       "inLanguage": "en",
       "publisher": { "@id": "https://kelbari.net/#org" }
     }
@@ -330,6 +345,25 @@
     </div>
   </section>
 
+  <!-- Questions: plain facts about Kelbari (also published as FAQPage structured data by the build) -->
+  <section class="home-faq" id="faq" aria-labelledby="faq-title">
+    <div class="wrap">
+      <div class="sec-head split" data-reveal>
+        <h2 id="faq-title">Kelbari, in short.</h2>
+        <p>The questions people ask before they get in touch, answered plainly.</p>
+      </div>
+      <div class="faq" data-faq>
+        <details open><summary>What is Kelbari?</summary><p>Kelbari is a web development, digital marketing and graphic design agency based in Bahawalpur, Pakistan. One team builds a business's website, runs its social media and designs its brand, so all three stay consistent.</p></details>
+        <details><summary>Where is Kelbari based?</summary><p>Kelbari is based in Bahawalpur, Punjab, Pakistan, and works with clients across Pakistan and abroad, including businesses in the United States. Projects run over WhatsApp, email and video calls.</p></details>
+        <details><summary>Who founded Kelbari?</summary><p>Kelbari was founded by Saqlain Akbar and Hafiz Ahmad.</p></details>
+        <details><summary>What services does Kelbari offer?</summary><p>Web development (marketing sites, online stores and custom tools), digital marketing (social media marketing, Meta and TikTok campaigns, email and monthly reporting) and graphic design (logos and identity systems, brand guidelines, campaign artwork, pitch decks and print).</p></details>
+        <details><summary>What has Kelbari built?</summary><p>Work includes shapargullay, an event ticketing platform for Pakistan; Mian Art Store, an online art-supply shop in Bahawalpur; websites for Barrientos Construction and FIXMYIMEI in the United States; and website, pitch deck and social media projects such as FanCourt, MAIVA and Apartment Maid.</p></details>
+        <details><summary>How does a project with Kelbari work?</summary><p>It starts with a scoping call and a written brief, followed by a proposal, usually within 48 hours. Designs are reviewed before any code is written, progress is shared weekly on a staging link, and at the end the client owns every file, repository and account.</p></details>
+        <details><summary>How do I contact Kelbari?</summary><p>Message Kelbari on WhatsApp at +92 301 9233246 (support is available 24/7), email kelbariofficial@gmail.com, or send a brief through the form at kelbari.net. Most enquiries get a reply the same day.</p></details>
+      </div>
+    </div>
+  </section>
+
   <!-- Contact -->
   <section class="contact on-dark" id="contact" aria-labelledby="contact-title">
     <div class="wrap">
@@ -425,6 +459,8 @@
         <a href="#work">Work</a>
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
+        <a href="/about/">About Kelbari</a>
+        <a href="#faq">FAQ</a>
       </nav>
       <div class="f-col">
         <p class="f-h">Services</p>

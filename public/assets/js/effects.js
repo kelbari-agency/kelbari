@@ -72,15 +72,17 @@
   const bar = document.createElement('div');
   bar.className = 'progress'; bar.setAttribute('aria-hidden', 'true');
   document.body.appendChild(bar);
-  let ticking = false;
+  // Page height is measured only when it can change (resize, content growing), never on each scroll.
+  let ticking = false, max = 1;
+  const measure = () => { max = Math.max(1, root.scrollHeight - window.innerHeight); };
   const setProgress = () => {
     ticking = false;
-    const max = root.scrollHeight - window.innerHeight;
-    bar.style.transform = `scaleX(${max > 0 ? clamp(window.scrollY / max, 0, 1) : 0})`;
+    bar.style.transform = `scaleX(${clamp(window.scrollY / max, 0, 1)})`;
   };
   window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(setProgress); } }, { passive: true });
-  window.addEventListener('resize', setProgress);
-  setProgress();
+  window.addEventListener('resize', () => { measure(); setProgress(); });
+  if ('ResizeObserver' in window) new ResizeObserver(() => { measure(); setProgress(); }).observe(document.body);
+  else window.addEventListener('load', () => { measure(); setProgress(); });
 
   /* ---------- Pointer spotlight (stat tiles, buttons, filter chips) ---------- */
   function spotlight(el) {

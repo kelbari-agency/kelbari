@@ -120,6 +120,14 @@ if (projects.length) {
   index = index.replace('<script src="/assets/js/hero.js" defer></script>', `<script type="application/json" id="projects-data">${embedded}</script>\n<script src="/assets/js/hero.js" defer></script>`);
 }
 
+/* ---------- 3b. home questions → FAQPage structured data (the visible answers are the source) ---------- */
+const strip = (h) => h.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&#39;|&rsquo;/g, "'").replace(/\s+/g, ' ').trim();
+const homeFaq = [...index.matchAll(/<details[^>]*><summary>([\s\S]*?)<\/summary><p>([\s\S]*?)<\/p><\/details>/g)].map((m) => ({ q: strip(m[1]), a: strip(m[2]) }));
+if (homeFaq.length) {
+  const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', '@id': `${SITE}/#faq`, mainEntity: homeFaq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) };
+  index = index.replace('</head>', `<script type="application/ld+json">${JSON.stringify(ld)}</script>\n</head>`);
+}
+
 /* ---------- 4. generated pages ---------- */
 function page({ path, title, description, image, jsonld, body }) {
   const url = `${SITE}${path}`;
@@ -249,6 +257,91 @@ ${ctaBand('Want work like this?')}`;
   sitemap.push({ loc: path, priority: '0.7', images: galleryOf(p).slice(0, 3).map((g) => ({ loc: g.image, title: p.title })) });
 }
 log('pages:', content.services.length, 'services,', galleryProjects.length, 'projects');
+
+/* ---------- 4b. /about/ — the facts about Kelbari in one place (for people, search engines and AI answers) ---------- */
+{
+  const path = '/about/';
+  const trail = [['Home', '/'], ['About Kelbari', path]];
+  const facts = [
+    ['Name', 'Kelbari'],
+    ['What it is', 'A web development, digital marketing and graphic design agency'],
+    ['Based in', 'Bahawalpur, Punjab, Pakistan'],
+    ['Works with', 'Clients across Pakistan and abroad, including the United States'],
+    ['Founders', 'Saqlain Akbar and Hafiz Ahmad'],
+    ['Website', 'kelbari.net'],
+    ['WhatsApp', '+92 301 9233246 (24/7)'],
+    ['Email', 'kelbariofficial@gmail.com'],
+    ['Support', 'support.kelbari@gmail.com'],
+  ];
+  const body = `
+<section class="page-hero"><div class="wrap">
+${crumbs(trail)}
+<p class="eyebrow">About Kelbari</p>
+<h1 class="display page-title">One team for the whole digital side of a business.</h1>
+<p class="page-lede">Kelbari is a web development, digital marketing and graphic design agency based in Bahawalpur, Pakistan, founded by Saqlain Akbar and Hafiz Ahmad. We build the website, run the social media and design the brand, so all three hold together.</p>
+<div class="cta"><a class="btn btn-cobalt btn-lg" href="/#contact">Start a project</a><a class="btn btn-ghost btn-lg" href="/#work">See the work</a></div>
+</div></section>
+<section class="svc-section" aria-labelledby="facts-title"><div class="wrap">
+<div class="sec-head" data-reveal><h2 id="facts-title">Kelbari at a glance</h2></div>
+<dl class="facts">${facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+</div></section>
+<section class="svc-section" aria-labelledby="why-title"><div class="wrap">
+<div class="sec-head" data-reveal><h2 id="why-title">Why one team</h2></div>
+<div class="prose" data-reveal>
+<p>Businesses don’t have a website problem, a social media problem and a design problem. They have one brand that has to hold together across all three. When those jobs go to three different people, nothing matches and nobody owns the result.</p>
+<p>So Kelbari works as a single connected unit. Every engagement starts with a written brief, runs on a visible timeline, and ends with the client owning every file, repository and account. No jargon, no retainer you can’t cancel, and no work you can’t take with you.</p>
+</div>
+</div></section>
+<section class="svc-section" aria-labelledby="svc-title"><div class="wrap">
+<div class="sec-head" data-reveal><h2 id="svc-title">Services</h2></div>
+<ul class="svc-list">${content.services.map((sv, i) => `<li data-reveal><span class="svc-num">${String(i + 1).padStart(2, '0')}</span><h3><a href="/${sv.slug}/">${esc(sv.name)}</a></h3><p>${esc(sv.lede)}</p></li>`).join('')}</ul>
+</div></section>
+<section class="svc-section" aria-labelledby="aw-title"><div class="wrap">
+<div class="sec-head" data-reveal><h2 id="aw-title">Selected work</h2></div>
+<ul class="work-index">${projects.map((pr) => `<li><a href="${isGallery(pr) ? `/work/${slugOf(pr)}/` : esc(pr.link || '/#work')}"${!isGallery(pr) && pr.link ? ' target="_blank" rel="noopener"' : ''}><strong>${esc(pr.title)}</strong><span>${esc(pr.category || '')}${pr.location ? ` · ${esc(pr.location)}` : ''}</span></a></li>`).join('')}</ul>
+</div></section>
+${ctaBand()}`;
+  const jsonld = { '@context': 'https://schema.org', '@graph': [
+    { '@type': 'AboutPage', '@id': `${SITE}${path}#page`, url: `${SITE}${path}`, name: 'About Kelbari', about: ORG, mainEntity: ORG, inLanguage: 'en' },
+    crumbLd(trail),
+  ] };
+  await mkdir(join(OUT, 'about'), { recursive: true });
+  await writeFile(join(OUT, 'about', 'index.html'), page({ path, title: 'About Kelbari — Web, Marketing & Design Agency, Bahawalpur', description: 'Kelbari is a web development, digital marketing and graphic design agency in Bahawalpur, Pakistan, founded by Saqlain Akbar and Hafiz Ahmad.', jsonld, body }));
+  sitemap.splice(1, 0, { loc: path, priority: '0.9' });
+}
+
+/* ---------- 4c. /llms.txt — a plain-text summary for AI assistants (llmstxt.org) ---------- */
+{
+  const lines = [
+    '# Kelbari',
+    '',
+    '> Kelbari (kelbari.net) is a web development, digital marketing and graphic design agency based in Bahawalpur, Punjab, Pakistan, founded by Saqlain Akbar and Hafiz Ahmad. One team builds a business\'s website, runs its social media and designs its brand. Kelbari works with clients across Pakistan and abroad.',
+    '',
+    'Kelbari is an agency name. It is not related to the fish species Cichla kelberi.',
+    '',
+    '- Website: https://kelbari.net/',
+    '- WhatsApp: +92 301 9233246 (support 24/7)',
+    '- Email: kelbariofficial@gmail.com (support: support.kelbari@gmail.com)',
+    '- Location: Bahawalpur, Punjab, Pakistan',
+    '- Founders: Saqlain Akbar, Hafiz Ahmad',
+    '',
+    '## Pages',
+    '',
+    `- [About Kelbari](${SITE}/about/): who Kelbari is, where it is based, founders and contact details`,
+    ...content.services.map((sv) => `- [${sv.name}](${SITE}/${sv.slug}/): ${sv.lede}`),
+    `- [Home](${SITE}/): services, process, selected work and contact form`,
+    '',
+    '## Selected work',
+    '',
+    ...projects.map((pr) => `- [${pr.title}](${isGallery(pr) ? `${SITE}/work/${slugOf(pr)}/` : pr.link || `${SITE}/#work`}): ${pr.category || 'Project'}${pr.location ? `, ${pr.location}` : ''}. ${(pr.description || '').split('. ')[0].replace(/\.$/, '')}.`),
+    '',
+    '## How a project runs',
+    '',
+    ...content.process.map((st) => `- ${st.name}: ${st.text}`),
+    '',
+  ];
+  await writeFile(join(OUT, 'llms.txt'), lines.join('\n'));
+}
 
 /* ---------- 5. sitemap ---------- */
 const xml = `<?xml version="1.0" encoding="UTF-8"?>

@@ -59,6 +59,7 @@ npx serve dist
 - **Responsive images:** WebP copies of every project cover (480, 800, 1200 px wide) and gallery image (800 px), served with `srcset` so phones download small files.
 - **Crawlable work:** the project cards are written into the home page HTML (search engines see them, nothing shifts while loading), and the project data is embedded so no extra request is needed.
 - **Generated pages:** `/web-development/`, `/digital-marketing/` and `/graphic-design/` (copy in `tools/content/services.json`), plus `/work/<slug>/` for every project with a gallery. Each has its own title, description, canonical URL, social tags, breadcrumbs and structured data (Service, FAQPage, CreativeWork, BreadcrumbList).
+- **About page and AI summary:** `/about/` collects the facts about Kelbari in one place, and `/llms.txt` is a plain-text summary (name, location, founders, services, work, contact) that AI assistants can read. The home page's "Kelbari, in short" questions are also published as FAQPage structured data.
 - **Sitemap:** `sitemap.xml` lists every page and its images.
 - **Speed:** the four scripts become one minified, fingerprinted file cached for a year; the CSS is minified and inlined, so nothing blocks the first paint; every HTML page is minified.
 
@@ -136,7 +137,7 @@ The site uses a v2 visual system. It replaces the colours and fonts in the origi
 - **Shapes:** large surfaces 32px radius, cards 24px, inputs 14px, buttons and chips fully rounded.
 - **Layouts:** a floating pill header, a bento hero (live network tile and stat tiles), a running band, an index-style services list on a scroll-linked spine, stacking process cards, a skeleton "coming soon" state, and a wordmark footer.
 
-The favicon set keeps the original guide's sizing (32 px and 16 px at 56% symbol, with the 16 px using the small-size variant), now on Midnight. To regenerate the icons and the social preview image:
+The favicons (16, 32, 48, 96 and 144 px, `favicon.ico` and `favicon.svg`) use the light colourway, the same as the WhatsApp and LinkedIn logo. Google Search only shows a site icon that is a square multiple of 48 px, which is why the 48 px sizes exist. App icons (Apple touch, manifest) stay on Midnight. To regenerate the icons and the social preview image:
 
 ```bash
 pip install pillow playwright && playwright install chromium
