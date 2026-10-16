@@ -10,6 +10,11 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Serverless functions (the password-gated Document Studio at /studio).
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # Security headers on every page.
 [[headers]]
   for = "/*"

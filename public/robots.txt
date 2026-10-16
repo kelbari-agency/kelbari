@@ -2,6 +2,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /studio
 
 # AI search and assistant crawlers, named explicitly so the site can be cited in AI answers.
 User-agent: Googlebot
@@ -21,5 +22,6 @@ User-agent: CCBot
 User-agent: meta-externalagent
 Allow: /
 Disallow: /admin/
+Disallow: /studio
 
 Sitemap: https://kelbari.net/sitemap.xml
