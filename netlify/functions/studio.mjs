@@ -2,6 +2,8 @@
 // The password is read from the STUDIO_PASSWORD environment variable (set in Netlify,
 // never in the repo). A correct password sets a short-lived signed cookie; the app HTML
 // is only ever served to an authenticated request.
+// Note: after adding or changing STUDIO_PASSWORD in Netlify, trigger a deploy so the
+// new value is picked up by this function.
 import crypto from 'node:crypto';
 import { APP_B64 } from './_studio_app.mjs';
 
