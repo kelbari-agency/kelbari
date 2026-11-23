@@ -64,6 +64,55 @@
       ]
     },
     {
+      "slug": "saas",
+      "name": "SaaS",
+      "category": "SaaS",
+      "title": "SaaS Development Company in Bahawalpur, Pakistan | Kelbari",
+      "description": "Kelbari designs, builds and runs SaaS products in Bahawalpur, Pakistan: web apps with logins, dashboards and live data, for our own products and for clients.",
+      "h1": "Software people sign in to, built and run by one team.",
+      "lede": "Web apps sold as a service: logins, dashboards and live data, built on modern web tools and kept running after launch. We make our own products, like Saqvia, and build them for clients.",
+      "items": [
+        {
+          "name": "SaaS products from idea to launch",
+          "text": "Scoping, design and build of a web app that customers sign up for and use every day."
+        },
+        {
+          "name": "Accounts for many customers",
+          "text": "One product that serves many businesses, each with its own users, data and settings."
+        },
+        {
+          "name": "Dashboards and admin tools",
+          "text": "Screens where owners and staff see orders, revenue and activity, and manage their own content."
+        },
+        {
+          "name": "Live, real-time features",
+          "text": "Updates that appear on every screen in a second, from new orders to status changes."
+        },
+        {
+          "name": "Hosting, updates and support",
+          "text": "We deploy, monitor and improve the product after launch, or hand it to your team with documentation."
+        }
+      ],
+      "faq": [
+        {
+          "q": "Do you build SaaS for clients, or only your own products?",
+          "a": "Both. Saqvia, our QR ordering system for restaurants, cafés and hotels, is our own product, and we build SaaS products for clients who want to sell software of their own."
+        },
+        {
+          "q": "How long does a SaaS product take to build?",
+          "a": "It depends on the scope. After a scoping call you get a written brief and a proposal with a timeline, usually within 48 hours, and you can follow weekly builds on a staging link."
+        },
+        {
+          "q": "Who owns the code?",
+          "a": "When we build a product for you, you own the code, the repository and every account."
+        },
+        {
+          "q": "Can you look after the product after launch?",
+          "a": "Yes. We can host, monitor and update it, add features as your customers ask for them, or hand it to your own team with documentation."
+        }
+      ]
+    },
+    {
       "slug": "digital-marketing",
       "name": "Digital marketing",
       "category": "Digital marketing",
