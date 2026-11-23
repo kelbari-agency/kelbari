@@ -46,6 +46,7 @@ collections:
                 widget: select
                 options:
                   - Web development
+                  - SaaS
                   - Digital marketing
                   - Graphic design
                   - Full brand system

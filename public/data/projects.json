@@ -1,6 +1,44 @@
 {
   "projects": [
     {
+      "title": "Saqvia",
+      "category": "SaaS",
+      "client": "Kelbari product",
+      "location": "Worldwide",
+      "description": "Kelbari’s own QR ordering system for restaurants, cafés and hotels. Guests scan the code on their table and order from their phone with nothing to download, the order reaches the kitchen screen in a second, and owners see orders, revenue and best sellers on one dashboard.",
+      "highlights": [
+        "A QR menu for every table, with photos, sizes and options and nothing to install",
+        "Live kitchen display that moves each order from new to preparing, ready and served",
+        "Owner dashboard with orders, revenue, prep time, best sellers and printable QR table cards",
+        "Works in any country, with each venue's own currency and time zone"
+      ],
+      "built_with": [
+        "Next.js",
+        "Render"
+      ],
+      "image": "/images/uploads/saqvia.jpg",
+      "link": "https://saqvia.onrender.com"
+    },
+    {
+      "title": "Q ILM Institute",
+      "category": "Web development",
+      "client": "Q ILM Institute",
+      "location": "Students worldwide",
+      "description": "A website for an online Quran academy that teaches children and adults one-to-one. Families compare courses from Basic Qaida to Hifz and Tajweed, see how live classes work and book a free three-day trial at a time that suits their time zone.",
+      "highlights": [
+        "Course pages from Basic Qaida and Nazira Quran to Hifz, Tajweed and translation",
+        "Free-trial booking that detects the learner's time zone",
+        "Fees, teachers, safeguarding and comparison pages written for parents",
+        "Pages for UK, US and Gulf time zones, a blog and WhatsApp enquiries throughout"
+      ],
+      "built_with": [
+        "Next.js",
+        "Netlify"
+      ],
+      "image": "/images/uploads/qilm-institute.jpg",
+      "link": "https://qilminstitute.com"
+    },
+    {
       "title": "shapargullay",
       "category": "Web development",
       "client": "shapargullay",

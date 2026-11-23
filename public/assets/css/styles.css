@@ -263,6 +263,7 @@ section { padding: clamp(80px, 10vw, 144px) 0; }
   .chips li:nth-child(1) { animation-delay: .05s; }
   .chips li:nth-child(2) { animation-delay: .1s; }
   .chips li:nth-child(3) { animation-delay: .15s; }
+  .chips li:nth-child(4) { animation-delay: .2s; }
   .hero h1 { animation-delay: .2s; }
   .hero-row > :nth-child(1) { animation-delay: .35s; }
   .hero-row > :nth-child(2) { animation-delay: .45s; }
