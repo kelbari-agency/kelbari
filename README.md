@@ -161,7 +161,8 @@ These need your accounts, so they can't be done from the code:
 3. **Google Business Profile:** create one for Kelbari (a service-area business can hide its street address).
 4. **Directory listings:** Clutch, GoodFirms, DesignRush and TechBehemoths are where agency buyers compare firms; list Kelbari on each with a link to kelbari.net.
 5. **LinkedIn company page:** link to kelbari.net, and share each new project page and blog article when it goes up.
-6. **After each new article:** in Search Console, paste the article's address into the search bar at the top and click **Request indexing**.
+6. **Bing and IndexNow:** `public/5c33b75a76d75576cbbbb0cd9ac821b8.txt` is the site's IndexNow key. To tell Bing (and other IndexNow engines) about a new or changed page, open `https://api.indexnow.org/indexnow?url=<page address>&key=5c33b75a76d75576cbbbb0cd9ac821b8` once.
+7. **After each new article:** in Search Console, paste the article's address into the search bar at the top and click **Request indexing**.
 
 ## Accessibility and performance
 

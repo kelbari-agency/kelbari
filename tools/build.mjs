@@ -230,16 +230,19 @@ log('blog:', posts.length, 'articles');
 
 for (const s of content.services) {
   const path = `/${s.slug}/`;
-  const related = projects.filter((p) => p.category === s.category);
-  const others = content.services.filter((o) => o.slug !== s.slug);
-  const trail = [['Home', '/'], ['Services', '/#services'], [s.name, path]];
+  const related = s.category ? projects.filter((p) => p.category === s.category) : [];
+  const parent = s.parent ? content.services.find((o) => o.slug === s.parent) : null;
+  const children = content.services.filter((o) => o.parent === s.slug);
+  const others = [...children, ...(parent ? [parent] : []), ...content.services.filter((o) => !o.parent && o.slug !== s.slug && o !== parent)];
+  const trail = [['Home', '/'], ['Services', '/#services'], ...(parent ? [[parent.name, `/${parent.slug}/`]] : []), [s.name, path]];
+  const guides = posts.filter((p) => p.service === s.slug || children.some((c) => c.slug === p.service));
   const body = `
 <section class="page-hero"><div class="wrap">
 ${crumbs(trail)}
-<p class="eyebrow">${esc(s.name)}</p>
+<p class="eyebrow">${parent ? `<a href="/${parent.slug}/">${esc(parent.name)}</a>` : esc(s.name)}</p>
 <h1 class="display page-title">${esc(s.h1)}</h1>
 <p class="page-lede">${esc(s.lede)}</p>
-<div class="cta"><a class="btn btn-cobalt btn-lg" href="/#contact">Start a project</a><a class="btn btn-ghost btn-lg" href="#work-list">See the work</a></div>
+<div class="cta"><a class="btn btn-cobalt btn-lg" href="/#contact">Start a project</a>${related.length ? '<a class="btn btn-ghost btn-lg" href="#work-list">See the work</a>' : guides.length ? '<a class="btn btn-ghost btn-lg" href="#guides">Read the guides</a>' : ''}</div>
 </div></section>
 <section class="svc-section" aria-labelledby="what-title"><div class="wrap">
 <div class="sec-head" data-reveal><h2 id="what-title">What we do</h2></div>
@@ -253,9 +256,9 @@ ${related.length ? `<section class="svc-section" id="work-list" aria-labelledby=
 <div class="sec-head" data-reveal><h2 id="rel-title">${esc(s.name)} work</h2></div>
 <div class="projects">${related.map(card).join('')}</div>
 </div></section>` : ''}
-${posts.some((p) => p.service === s.slug) ? `<section class="svc-section" aria-labelledby="guides-title"><div class="wrap">
+${guides.length ? `<section class="svc-section" id="guides" aria-labelledby="guides-title"><div class="wrap">
 <div class="sec-head" data-reveal><h2 id="guides-title">Guides</h2></div>
-<ul class="post-grid">${posts.filter((p) => p.service === s.slug).slice(0, 6).map((p) => postCard(p, 'h3')).join('')}</ul>
+<ul class="post-grid">${guides.slice(0, 6).map((p) => postCard(p, 'h3')).join('')}</ul>
 </div></section>` : ''}
 <section class="svc-section" aria-labelledby="faq-title"><div class="wrap faq-wrap">
 <div class="sec-head" data-reveal><h2 id="faq-title">Questions</h2></div>
@@ -267,7 +270,7 @@ ${posts.some((p) => p.service === s.slug) ? `<section class="svc-section" aria-l
 </div></section>
 ${ctaBand()}`;
   const jsonld = { '@context': 'https://schema.org', '@graph': [
-    { '@type': 'Service', '@id': `${SITE}${path}#service`, name: s.name, serviceType: s.name, description: s.description, url: `${SITE}${path}`, provider: { '@type': 'Organization', ...ORG, name: 'Kelbari', url: `${SITE}/` }, areaServed: [{ '@type': 'City', name: 'Bahawalpur' }, { '@type': 'Country', name: 'Pakistan' }, 'Worldwide'],
+    { '@type': 'Service', '@id': `${SITE}${path}#service`, name: s.name, serviceType: s.name, ...(parent ? { isRelatedTo: { '@id': `${SITE}/${parent.slug}/#service` } } : {}), description: s.description, url: `${SITE}${path}`, provider: { '@type': 'Organization', ...ORG, name: 'Kelbari', url: `${SITE}/` }, areaServed: [{ '@type': 'City', name: 'Bahawalpur' }, { '@type': 'Country', name: 'Pakistan' }, 'Worldwide'],
       hasOfferCatalog: { '@type': 'OfferCatalog', name: s.name, itemListElement: s.items.map((it) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: it.name, description: it.text } })) } },
     { '@type': 'FAQPage', mainEntity: s.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
     crumbLd(trail),
@@ -356,7 +359,7 @@ ${crumbs(trail)}
 <div class="article">${p.html}</div>
 <aside class="post-aside">
 ${p.toc.length >= 3 ? `<nav class="aside-card toc" aria-labelledby="toc-title"><h2 id="toc-title">In this article</h2><ol>${p.toc.map((t) => `<li><a href="#${t.id}">${t.text.replace(/<[^>]+>/g, '')}</a></li>`).join('')}</ol></nav>` : ''}
-<div class="aside-card aside-cta"><h2>Work with Kelbari</h2><p>${svc ? `Need help with ${esc(svc.name.toLowerCase() === 'saas' ? 'a SaaS product' : svc.name.toLowerCase())}? Send a short brief and get a written proposal, usually within 48 hours.` : 'Send a short brief and get a written proposal, usually within 48 hours.'}</p><a class="btn btn-electric" href="/#contact">Start a project</a>${svc ? `<a class="aside-link" href="/${svc.slug}/">${esc(svc.name)} services</a>` : ''}</div>
+<div class="aside-card aside-cta"><h2>Work with Kelbari</h2><p>Send a short brief and get a written proposal, usually within 48 hours.</p><a class="btn btn-electric" href="/#contact">Start a project</a>${svc ? `<a class="aside-link" href="/${svc.slug}/">More about ${esc(svc.name)}</a>` : ''}</div>
 </aside>
 </div>
 </article>

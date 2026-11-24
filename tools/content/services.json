@@ -40,6 +40,10 @@
           "text": "Internal tools that replace spreadsheets and manual steps for your team."
         },
         {
+          "name": "AI chatbots and assistants",
+          "text": "Assistants on your site or WhatsApp that answer from your own content and hand over to a person when needed."
+        },
+        {
           "name": "Performance and SEO groundwork",
           "text": "Fast loading, clean code, structured data and the technical setup search engines look for."
         }
@@ -130,6 +134,10 @@
           "text": "Campaigns planned, built and tuned around a clear goal, from enquiries to sales."
         },
         {
+          "name": "Search engine optimisation (SEO)",
+          "text": "Technical fixes, local search and content that help the right people find you on Google."
+        },
+        {
           "name": "Email campaigns",
           "text": "Marketing emails designed and written for the people you need to reach."
         },
@@ -211,6 +219,162 @@
         {
           "q": "Can the same team run our social media?",
           "a": "Yes. Design, digital marketing and web development all sit with one team, so your artwork, feed and website stay in sync."
+        }
+      ]
+    },
+    {
+      "slug": "seo-services",
+      "name": "SEO",
+      "parent": "digital-marketing",
+      "title": "SEO Services in Pakistan | Kelbari",
+      "description": "SEO services from Kelbari in Bahawalpur, Pakistan: technical fixes, local SEO and Google Business Profile, content that answers real searches, and plain monthly reports.",
+      "h1": "SEO for businesses that want to be found.",
+      "lede": "Technical fixes, local search and content that answers what your customers actually type into Google, with a plain report every month. No promises of first place, because nobody can honestly make them.",
+      "items": [
+        {
+          "name": "Technical SEO audit and fixes",
+          "text": "Speed, Core Web Vitals, indexing, sitemaps, structured data and the problems that stop Google reading your site properly."
+        },
+        {
+          "name": "Local SEO and Google Business Profile",
+          "text": "Your profile, categories, photos, reviews and listings set up so you show in local results and on Google Maps."
+        },
+        {
+          "name": "Keyword research and content plans",
+          "text": "The searches your customers really make, mapped to pages and articles worth writing."
+        },
+        {
+          "name": "On-page optimisation",
+          "text": "Titles, descriptions, headings and internal links that tell Google, and people, what each page is for."
+        },
+        {
+          "name": "Search Console setup and reporting",
+          "text": "Google Search Console and analytics set up properly, and a monthly report on searches, clicks and enquiries."
+        }
+      ],
+      "faq": [
+        {
+          "q": "How long does SEO take to work?",
+          "a": "Usually months, not weeks. Technical fixes can help quickly, but ranking for competitive searches takes steady work on content and reputation. We set realistic targets in the brief."
+        },
+        {
+          "q": "Can you guarantee the first position on Google?",
+          "a": "No, and be careful with anyone who does. Google decides rankings, and its own guidance says no one can guarantee a top spot. What we can do is fix what holds your site back and publish pages that deserve to rank."
+        },
+        {
+          "q": "Do you write the content as well?",
+          "a": "Yes. Service pages and articles are planned and written by the same team that handles the technical work."
+        },
+        {
+          "q": "Do I need a new website before starting SEO?",
+          "a": "Not always. We start with an audit of the site you have and tell you plainly whether fixing it or rebuilding it makes more sense."
+        }
+      ]
+    },
+    {
+      "slug": "social-media-management",
+      "name": "Social media management",
+      "parent": "digital-marketing",
+      "category": "Digital marketing",
+      "title": "Social Media Management Services in Pakistan | Kelbari",
+      "description": "Social media management from Kelbari: content calendars, posts and captions designed in-house, scheduling, replies to comments, Meta and TikTok ads and a monthly report.",
+      "h1": "Social media, planned, designed and run by one team.",
+      "lede": "We plan the month, design and write the posts, schedule them, reply to comments and messages, and report on what it did, for Instagram, Facebook, LinkedIn and TikTok.",
+      "items": [
+        {
+          "name": "Monthly content calendar",
+          "text": "A plan for the month built around your offers, seasons and events, agreed before anything is posted."
+        },
+        {
+          "name": "Post design and captions",
+          "text": "Graphics, carousels and captions made in-house, so every post looks and sounds like your brand."
+        },
+        {
+          "name": "Scheduling and publishing",
+          "text": "Posts go out at the right times on each platform, without you having to remember."
+        },
+        {
+          "name": "Community management",
+          "text": "Comments and messages answered in your brand's voice, with sales enquiries passed to you quickly."
+        },
+        {
+          "name": "Meta and TikTok ads",
+          "text": "Paid campaigns that put your best posts in front of the right people, with a clear goal and budget."
+        },
+        {
+          "name": "Monthly performance report",
+          "text": "Reach, engagement, enquiries and ad results in plain language, with what we'll change next month."
+        }
+      ],
+      "faq": [
+        {
+          "q": "Which platforms do you manage?",
+          "a": "Instagram, Facebook, LinkedIn and TikTok. We recommend the ones your customers actually use rather than all of them."
+        },
+        {
+          "q": "Can I see posts before they go live?",
+          "a": "Yes. How you review and approve the month's posts is agreed in the brief before we start."
+        },
+        {
+          "q": "Do you also run paid ads?",
+          "a": "Yes, on Meta (Facebook and Instagram) and TikTok, planned around a clear goal such as enquiries or sales."
+        },
+        {
+          "q": "Am I locked into a long contract?",
+          "a": "No. There is no retainer you can't cancel."
+        }
+      ]
+    },
+    {
+      "slug": "ai-chatbot-development",
+      "name": "AI chatbots and agents",
+      "parent": "web-development",
+      "title": "AI Chatbot & AI Agent Development in Pakistan | Kelbari",
+      "description": "Kelbari builds AI chatbots for websites and WhatsApp, and AI agents for routine tasks, that answer from your own information and hand over to a person when they should.",
+      "h1": "AI chatbots and agents that answer from your own information.",
+      "lede": "Assistants for your website and WhatsApp that answer questions from your own content, take enquiries and bookings and hand over to a person when they should, plus AI agents that take routine work off your team.",
+      "items": [
+        {
+          "name": "Website chatbots",
+          "text": "An assistant on your site that answers questions about your services, prices, hours and policies, and collects enquiries."
+        },
+        {
+          "name": "WhatsApp assistants",
+          "text": "Quick answers and order or booking updates on the app your customers already use, with a person one tap away."
+        },
+        {
+          "name": "AI agents for routine work",
+          "text": "Agents that draft replies, follow up on enquiries, sort inboxes and prepare reports, with your approval before anything important is sent."
+        },
+        {
+          "name": "Answers from your own content",
+          "text": "The assistant works from your website, documents and FAQs, so it answers your way and says when it doesn't know."
+        },
+        {
+          "name": "Hand-off and guardrails",
+          "text": "Clear rules for when a person takes over, what the assistant may and may not do, and logs of what it did."
+        },
+        {
+          "name": "Testing and improvement",
+          "text": "Tested on real customer questions before launch, then improved from the conversations it actually has."
+        }
+      ],
+      "faq": [
+        {
+          "q": "Will an AI chatbot make things up?",
+          "a": "It can, which is why we build it to answer from your own content, to say when it doesn't know, and to hand over to a person. That reduces wrong answers a lot, but no AI is perfect, so we keep a person in the loop for anything important."
+        },
+        {
+          "q": "Can it reply in Urdu and Roman Urdu?",
+          "a": "Current AI models handle English, Urdu and Roman Urdu. We test the assistant with real messages from your customers before it goes live."
+        },
+        {
+          "q": "What does it cost to run?",
+          "a": "There is the build, and then a running cost for the AI service that grows with the number of conversations. We estimate both in the proposal so there are no surprises."
+        },
+        {
+          "q": "What is the difference between a chatbot and an AI agent?",
+          "a": "A chatbot answers questions. An agent can also take actions with your tools, such as updating a booking or drafting a follow-up email. We give agents limited permissions and ask for approval before anything that spends money or contacts a customer."
         }
       ]
     }

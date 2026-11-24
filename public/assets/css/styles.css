@@ -314,6 +314,8 @@ section { padding: clamp(80px, 10vw, 144px) 0; }
 .p-body > p { font-size: 18px; color: var(--slate); max-width: 46ch; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
 .tags li { padding: 8px 14px; border-radius: 999px; background: var(--white); box-shadow: inset 0 0 0 1px var(--line); font-size: 14px; font-weight: 500; color: var(--ink); transition: box-shadow .3s; }
+.tags a { color: var(--cobalt); text-decoration: none; }
+.tags a:hover { text-decoration: underline; text-underline-offset: 3px; }
 @media (hover: hover) {
   .pillar:hover { background: var(--white); border-top-color: transparent; }
   .pillar:hover + .pillar { border-top-color: transparent; }
