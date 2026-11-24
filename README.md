@@ -9,11 +9,12 @@ Plain HTML, CSS and JavaScript, no framework. A small build step (`npm run build
 ```
 .
 ├── netlify.toml              Netlify settings: build command, security headers, caching
-├── package.json              Build dependencies (esbuild, sharp, html-minifier-terser)
+├── package.json              Build dependencies (esbuild, sharp, html-minifier-terser, marked, yaml)
 ├── README.md
 ├── tools/
 │   ├── build.mjs             The production build: public/ → dist/
-│   ├── content/services.json Copy for the three service pages
+│   ├── content/services.json Copy for the four service pages
+│   ├── content/blog/         Blog articles, one Markdown file each (edited by hand or at /admin)
 │   ├── make-brand-assets.py  Regenerates the favicon set, app icons and the social preview image
 │   └── og-template.html      Template for the social preview image (1200 × 630)
 ├── dist/                     Build output (not committed). This is what Netlify publishes.
@@ -60,6 +61,7 @@ npx serve dist
 - **Crawlable work:** the project cards are written into the home page HTML (search engines see them, nothing shifts while loading), and the project data is embedded so no extra request is needed.
 - **Generated pages:** `/web-development/`, `/saas/`, `/digital-marketing/` and `/graphic-design/` (copy in `tools/content/services.json`), plus `/work/<slug>/` for every project with a gallery. Each has its own title, description, canonical URL, social tags, breadcrumbs and structured data (Service, FAQPage, CreativeWork, BreadcrumbList).
 - **About page and AI summary:** `/about/` collects the facts about Kelbari in one place, and `/llms.txt` is a plain-text summary (name, location, founders, services, work, contact) that AI assistants can read. The home page's "Kelbari, in short" questions are also published as FAQPage structured data.
+- **Blog:** every `tools/content/blog/<slug>.md` becomes `/blog/<slug>/` with BlogPosting structured data, a table of contents and related articles. The build also writes `/blog/` (all articles), the RSS feed `/blog/feed.xml`, the three latest articles on the home page and a "Guides" list on each service page.
 - **Sitemap:** `sitemap.xml` lists every page and its images.
 - **Speed:** the four scripts become one minified, fingerprinted file cached for a year; the CSS is minified and inlined, so nothing blocks the first paint; every HTML page is minified.
 
@@ -107,6 +109,12 @@ Every card is clickable and has one button:
 
 The filter buttons above the cards are built from the categories in use.
 
+## Write a blog article
+
+At **kelbari.net/admin**, open **Blog → New article**, fill in the title, description, category and related service, write the article and click **Publish**. It goes live in a minute or two at `kelbari.net/blog/<address>/`. Tick **Draft** to save without publishing.
+
+What makes an article rank: answer one real question better than the pages already on Google's first page, from your own experience (your projects, your numbers, your clients' questions). Link to the relevant service page and one or two other articles. One genuinely useful article a week beats ten thin ones; Google demotes mass-produced filler.
+
 ## How deploys work
 
 - Every push or merge to `main` deploys to production at https://kelbari.net. Work on a branch and open a pull request to get a preview first.
@@ -152,7 +160,8 @@ These need your accounts, so they can't be done from the code:
 2. **Bing Webmaster Tools:** import the site from Search Console.
 3. **Google Business Profile:** create one for Kelbari (a service-area business can hide its street address).
 4. **Directory listings:** Clutch, GoodFirms, DesignRush and TechBehemoths are where agency buyers compare firms; list Kelbari on each with a link to kelbari.net.
-5. **LinkedIn company page:** link to kelbari.net, and share each new project page when it goes up.
+5. **LinkedIn company page:** link to kelbari.net, and share each new project page and blog article when it goes up.
+6. **After each new article:** in Search Console, paste the article's address into the search bar at the top and click **Request indexing**.
 
 ## Accessibility and performance
 

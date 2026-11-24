@@ -7,10 +7,14 @@
     "build": "node tools/build.mjs",
     "preview": "npx serve dist"
   },
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "devDependencies": {
     "esbuild": "0.24.2",
     "html-minifier-terser": "7.2.0",
-    "sharp": "0.33.5"
+    "marked": "12.0.2",
+    "sharp": "0.33.5",
+    "yaml": "2.4.5"
   }
 }

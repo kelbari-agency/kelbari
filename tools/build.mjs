@@ -4,7 +4,8 @@
 //  2. Makes responsive WebP sizes of project covers and gallery images.
 //  3. Renders the project cards into the home page (crawlable, no layout shift) and embeds their data.
 //  4. Generates a page per service (/web-development/ …) and per gallery project (/work/<slug>/).
-//  5. Writes sitemap.xml.
+//  5. Builds the blog from tools/content/blog/*.md: /blog/, one page per article, an RSS feed,
+//     and links from the home page and the service pages. Writes sitemap.xml.
 //  6. Bundles and minifies the JavaScript into one fingerprinted file, inlines the minified CSS,
 //     and minifies every HTML page.
 //
@@ -17,6 +18,8 @@ import { fileURLToPath } from 'node:url';
 import * as esbuild from 'esbuild';
 import sharp from 'sharp';
 import { minify as minifyHtml } from 'html-minifier-terser';
+import { Marked } from 'marked';
+import YAML from 'yaml';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'public');
@@ -129,7 +132,7 @@ if (homeFaq.length) {
 }
 
 /* ---------- 4. generated pages ---------- */
-function page({ path, title, description, image, jsonld, body }) {
+function page({ path, title, description, image, jsonld, body, type = 'website' }) {
   const url = `${SITE}${path}`;
   return `<!DOCTYPE html>
 <html lang="en">
@@ -143,7 +146,7 @@ function page({ path, title, description, image, jsonld, body }) {
 <meta name="theme-color" content="#F8F8FC">
 ${headCommon}
 <link rel="stylesheet" href="/assets/css/styles.css">
-<meta property="og:type" content="website">
+<meta property="og:type" content="${type}">
 <meta property="og:site_name" content="Kelbari">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
@@ -153,6 +156,7 @@ ${headCommon}
 <meta name="twitter:title" content="${esc(title)}">
 <meta name="twitter:description" content="${esc(description)}">
 <meta name="twitter:image" content="${SITE}${image || '/assets/og-image.png'}">
+<link rel="alternate" type="application/rss+xml" title="Kelbari Blog" href="/blog/feed.xml">
 <script>document.documentElement.className += ' js';</script>
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 </head>
@@ -180,6 +184,58 @@ const ctaBand = (h = 'Have a project in mind?', p = 'Send a brief or message us 
 const content = JSON.parse(await readFile(join(ROOT, 'tools/content/services.json'), 'utf8'));
 const sitemap = [{ loc: '/', priority: '1.0', images: projects.filter((p) => p.image).map((p) => ({ loc: p.image_src || p.image, title: p.title })) }];
 
+/* ---------- blog articles: tools/content/blog/<slug>.md = YAML front matter + Markdown ---------- */
+const BLOG_DIR = join(ROOT, 'tools/content/blog');
+const FOUNDERS = ['Saqlain Akbar', 'Hafiz Ahmad'];
+const isoDay = (d) => (d instanceof Date ? d.toISOString() : String(d || '')).slice(0, 10);
+const longDate = (d) => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const slugify = (t) => t.toLowerCase().replace(/<[^>]+>/g, '').replace(/&[a-z#0-9]+;/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+const posts = [];
+if (await exists(BLOG_DIR)) {
+  for (const f of (await readdir(BLOG_DIR)).filter((n) => n.endsWith('.md')).sort()) {
+    const raw = await readFile(join(BLOG_DIR, f), 'utf8');
+    const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+    if (!m) throw new Error(`blog/${f}: front matter (--- … ---) is missing`);
+    const fm = YAML.parse(m[1]) || {};
+    if (fm.draft) continue;
+    const slug = basename(f, '.md');
+    for (const k of ['title', 'description', 'date']) if (!fm[k]) throw new Error(`blog/${f}: "${k}" is missing`);
+    if (!/^[a-z0-9-]+$/.test(slug)) throw new Error(`blog/${f}: use lowercase letters, numbers and dashes in the file name`);
+    const toc = [], ids = new Set();
+    const md = new Marked({ gfm: true });
+    md.use({ renderer: {
+      heading(text, level) {
+        let id = slugify(text) || 'section'; while (ids.has(id)) id += '-2'; ids.add(id);
+        if (level === 2) toc.push({ id, text });
+        return `<h${level} id="${id}">${text}</h${level}>\n`;
+      },
+      table(header, body) { return `<div class="table-wrap"><table><thead>${header}</thead><tbody>${body}</tbody></table></div>\n`; },
+      link(href, title, text) {
+        const ext = /^https?:\/\//.test(href || '') && !(href || '').startsWith(SITE);
+        return `<a href="${esc(href || '')}"${title ? ` title="${esc(title)}"` : ''}${ext ? ' rel="noopener"' : ''}>${text}</a>`;
+      },
+    } });
+    const html = md.parse(m[2].replace(/^\s*#\s.*\n/, ''));
+    const words = m[2].split(/\s+/).filter(Boolean).length;
+    const date = isoDay(fm.date), updated = fm.updated ? isoDay(fm.updated) : date;
+    posts.push({ slug, path: `/blog/${slug}/`, title: String(fm.title), description: String(fm.description), date, updated,
+      author: String(fm.author || 'Kelbari'), category: String(fm.category || 'Guides'), service: fm.service ? String(fm.service) : '',
+      keywords: [].concat(fm.keywords || []).map(String), html, toc, words, minutes: Math.max(1, Math.round(words / 220)) });
+  }
+  posts.sort((a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title));
+}
+const postCard = (p, h = 'h2') => `<li><article class="post-card"><span class="post-cat">${esc(p.category)}</span><${h}><a href="${p.path}">${esc(p.title)}</a></${h}><p>${esc(p.description)}</p><p class="post-meta"><span><time datetime="${p.date}">${longDate(p.date)}</time></span><span>${p.minutes} min read</span></p></article></li>`;
+log('blog:', posts.length, 'articles');
+
+if (posts.length) {
+  index = index.replace('<!-- blog-teaser: the build puts the latest articles here -->', `<section class="blog-teaser" id="blog" aria-labelledby="blog-title">
+    <div class="wrap">
+      <div class="sec-head" data-reveal><h2 id="blog-title">From the blog</h2><a class="btn btn-ghost" href="/blog/">All articles</a></div>
+      <ul class="post-grid">${posts.slice(0, 3).map((p) => postCard(p, 'h3')).join('')}</ul>
+    </div>
+  </section>`);
+}
+
 for (const s of content.services) {
   const path = `/${s.slug}/`;
   const related = projects.filter((p) => p.category === s.category);
@@ -204,6 +260,10 @@ ${crumbs(trail)}
 ${related.length ? `<section class="svc-section" id="work-list" aria-labelledby="rel-title"><div class="wrap">
 <div class="sec-head" data-reveal><h2 id="rel-title">${esc(s.name)} work</h2></div>
 <div class="projects">${related.map(card).join('')}</div>
+</div></section>` : ''}
+${posts.some((p) => p.service === s.slug) ? `<section class="svc-section" aria-labelledby="guides-title"><div class="wrap">
+<div class="sec-head" data-reveal><h2 id="guides-title">Guides</h2></div>
+<ul class="post-grid">${posts.filter((p) => p.service === s.slug).slice(0, 6).map((p) => postCard(p, 'h3')).join('')}</ul>
 </div></section>` : ''}
 <section class="svc-section" aria-labelledby="faq-title"><div class="wrap faq-wrap">
 <div class="sec-head" data-reveal><h2 id="faq-title">Questions</h2></div>
@@ -256,7 +316,89 @@ ${ctaBand('Want work like this?')}`;
   await writeFile(join(OUT, 'work', slug, 'index.html'), page({ path, title: `${p.title} — ${p.category || 'Project'} by Kelbari`, description: desc, image: p.image ? p.image : undefined, jsonld, body }));
   sitemap.push({ loc: path, priority: '0.7', images: galleryOf(p).slice(0, 3).map((g) => ({ loc: g.image, title: p.title })) });
 }
-log('pages:', content.services.length, 'services,', galleryProjects.length, 'projects');
+log('pages:', content.services.length, 'services,', galleryProjects.length, 'projects,', posts.length, 'articles');
+
+/* ---------- 4a. /blog/ and one page per article, plus an RSS feed ---------- */
+if (posts.length) {
+  const blogPath = '/blog/';
+  const blogTitle = 'Kelbari Blog — Websites, SaaS, Marketing, SEO & AI Guides';
+  const blogDesc = 'Practical guides from Kelbari on website costs, online stores, SaaS, social media, SEO and AI chatbots, written for business owners in Pakistan and beyond.';
+  const orgPublisher = { '@type': 'Organization', ...ORG, name: 'Kelbari', url: `${SITE}/`, logo: { '@type': 'ImageObject', url: `${SITE}/assets/brand/icon-512.png` } };
+  const authorLd = (a) => (FOUNDERS.includes(a) ? { '@type': 'Person', name: a, url: `${SITE}/about/` } : { '@type': 'Organization', ...ORG, name: 'Kelbari', url: `${SITE}/` });
+  {
+    const trail = [['Home', '/'], ['Blog', blogPath]];
+    const body = `
+<section class="page-hero"><div class="wrap">
+${crumbs(trail)}
+<p class="eyebrow">Blog</p>
+<h1 class="display page-title">Plain answers for building a business online.</h1>
+<p class="page-lede">Guides on websites, online stores, SaaS, social media, SEO and AI, written from the work we do every day for businesses in Pakistan and abroad.</p>
+</div></section>
+<section class="svc-section" aria-label="Articles"><div class="wrap">
+<ul class="post-grid">${posts.map((p) => postCard(p)).join('')}</ul>
+</div></section>
+${ctaBand()}`;
+    const jsonld = { '@context': 'https://schema.org', '@graph': [
+      { '@type': 'Blog', '@id': `${SITE}${blogPath}#blog`, name: 'Kelbari Blog', description: blogDesc, url: `${SITE}${blogPath}`, inLanguage: 'en', publisher: orgPublisher,
+        blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: `${SITE}${p.path}`, datePublished: p.date, dateModified: p.updated })) },
+      crumbLd(trail),
+    ] };
+    await mkdir(join(OUT, 'blog'), { recursive: true });
+    await writeFile(join(OUT, 'blog', 'index.html'), page({ path: blogPath, title: blogTitle, description: blogDesc, jsonld, body }));
+    sitemap.push({ loc: blogPath, priority: '0.8', lastmod: posts[0].updated });
+  }
+  for (const p of posts) {
+    const trail = [['Home', '/'], ['Blog', blogPath], [p.title, p.path]];
+    const svc = content.services.find((s) => s.slug === p.service);
+    const related = [...posts.filter((o) => o !== p && o.category === p.category), ...posts.filter((o) => o !== p && o.category !== p.category)].slice(0, 3);
+    const body = `
+<article class="post">
+<header class="page-hero post-hero"><div class="wrap">
+${crumbs(trail)}
+<p class="eyebrow"><a href="/blog/">${esc(p.category)}</a></p>
+<h1 class="display page-title">${esc(p.title)}</h1>
+<p class="page-lede">${esc(p.description)}</p>
+<p class="post-meta"><span>By ${esc(p.author)}</span><span><time datetime="${p.date}">${longDate(p.date)}</time></span>${p.updated !== p.date ? `<span>Updated <time datetime="${p.updated}">${longDate(p.updated)}</time></span>` : ''}<span>${p.minutes} min read</span></p>
+</div></header>
+<div class="wrap post-layout">
+<div class="article">${p.html}</div>
+<aside class="post-aside">
+${p.toc.length >= 3 ? `<nav class="aside-card toc" aria-labelledby="toc-title"><h2 id="toc-title">In this article</h2><ol>${p.toc.map((t) => `<li><a href="#${t.id}">${t.text.replace(/<[^>]+>/g, '')}</a></li>`).join('')}</ol></nav>` : ''}
+<div class="aside-card aside-cta"><h2>Work with Kelbari</h2><p>${svc ? `Need help with ${esc(svc.name.toLowerCase() === 'saas' ? 'a SaaS product' : svc.name.toLowerCase())}? Send a short brief and get a written proposal, usually within 48 hours.` : 'Send a short brief and get a written proposal, usually within 48 hours.'}</p><a class="btn btn-electric" href="/#contact">Start a project</a>${svc ? `<a class="aside-link" href="/${svc.slug}/">${esc(svc.name)} services</a>` : ''}</div>
+</aside>
+</div>
+</article>
+${related.length ? `<section class="svc-section" aria-labelledby="more-posts"><div class="wrap">
+<div class="sec-head" data-reveal><h2 id="more-posts">Keep reading</h2></div>
+<ul class="post-grid">${related.map((o) => postCard(o, 'h3')).join('')}</ul>
+</div></section>` : ''}
+${ctaBand()}`;
+    const jsonld = { '@context': 'https://schema.org', '@graph': [
+      { '@type': 'BlogPosting', '@id': `${SITE}${p.path}#article`, headline: p.title, description: p.description, url: `${SITE}${p.path}`, mainEntityOfPage: `${SITE}${p.path}`,
+        datePublished: `${p.date}T09:00:00+05:00`, dateModified: `${p.updated}T09:00:00+05:00`, author: authorLd(p.author), publisher: orgPublisher,
+        image: `${SITE}/assets/og-image.png`, inLanguage: 'en', articleSection: p.category, wordCount: p.words, ...(p.keywords.length ? { keywords: p.keywords.join(', ') } : {}),
+        isPartOf: { '@id': `${SITE}${blogPath}#blog` } },
+      crumbLd(trail),
+    ] };
+    await mkdir(join(OUT, 'blog', p.slug), { recursive: true });
+    await writeFile(join(OUT, 'blog', p.slug, 'index.html'), page({ path: p.path, title: `${p.title} | Kelbari`, description: p.description, jsonld, body, type: 'article' }));
+    sitemap.push({ loc: p.path, priority: '0.7', lastmod: p.updated });
+  }
+  const rss = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>Kelbari Blog</title>
+<link>${SITE}${blogPath}</link>
+<atom:link href="${SITE}/blog/feed.xml" rel="self" type="application/rss+xml"/>
+<description>${esc(blogDesc)}</description>
+<language>en</language>
+<lastBuildDate>${new Date(`${posts[0].updated}T04:00:00Z`).toUTCString()}</lastBuildDate>
+${posts.map((p) => `<item><title>${esc(p.title)}</title><link>${SITE}${p.path}</link><guid isPermaLink="true">${SITE}${p.path}</guid><pubDate>${new Date(`${p.date}T04:00:00Z`).toUTCString()}</pubDate><category>${esc(p.category)}</category><description>${esc(p.description)}</description></item>`).join('\n')}
+</channel>
+</rss>
+`;
+  await writeFile(join(OUT, 'blog', 'feed.xml'), rss);
+}
 
 /* ---------- 4b. /about/ — the facts about Kelbari in one place (for people, search engines and AI answers) ---------- */
 {
@@ -331,6 +473,7 @@ ${ctaBand()}`;
     ...content.services.map((sv) => `- [${sv.name}](${SITE}/${sv.slug}/): ${sv.lede}`),
     `- [Home](${SITE}/): services, process, selected work and contact form`,
     '',
+    ...(posts.length ? ['## Blog', '', `- [All articles](${SITE}/blog/): guides for business owners`, ...posts.map((p) => `- [${p.title}](${SITE}${p.path}): ${p.description}`), ''] : []),
     '## Selected work',
     '',
     ...projects.map((pr) => `- [${pr.title}](${isGallery(pr) ? `${SITE}/work/${slugOf(pr)}/` : pr.link || `${SITE}/#work`}): ${pr.category || 'Project'}${pr.location ? `, ${pr.location}` : ''}. ${(pr.description || '').split('. ')[0].replace(/\.$/, '')}.`),
@@ -348,7 +491,7 @@ const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${sitemap.map((u) => `  <url>
     <loc>${SITE}${u.loc}</loc>
-    <lastmod>${TODAY}</lastmod>
+    <lastmod>${u.lastmod || TODAY}</lastmod>
     <priority>${u.priority}</priority>${(u.images || []).map((im) => `
     <image:image><image:loc>${SITE}${esc(im.loc)}</image:loc><image:title>${esc(im.title)}</image:title></image:image>`).join('')}
   </url>`).join('\n')}
