@@ -5,7 +5,7 @@
 //  3. Renders the project cards into the home page (crawlable, no layout shift) and embeds their data.
 //  4. Generates a page per service (/web-development/ …) and per gallery project (/work/<slug>/).
 //  5. Builds the blog from tools/content/blog/*.md: /blog/, one page per article, an RSS feed,
-//     and links from the home page and the service pages. Writes sitemap.xml.
+//     and a Guides list on the service pages. Writes sitemap.xml.
 //  6. Bundles and minifies the JavaScript into one fingerprinted file, inlines the minified CSS,
 //     and minifies every HTML page.
 //
@@ -227,14 +227,6 @@ if (await exists(BLOG_DIR)) {
 const postCard = (p, h = 'h2') => `<li><article class="post-card"><span class="post-cat">${esc(p.category)}</span><${h}><a href="${p.path}">${esc(p.title)}</a></${h}><p>${esc(p.description)}</p><p class="post-meta"><span><time datetime="${p.date}">${longDate(p.date)}</time></span><span>${p.minutes} min read</span></p></article></li>`;
 log('blog:', posts.length, 'articles');
 
-if (posts.length) {
-  index = index.replace('<!-- blog-teaser: the build puts the latest articles here -->', `<section class="blog-teaser" id="blog" aria-labelledby="blog-title">
-    <div class="wrap">
-      <div class="sec-head" data-reveal><h2 id="blog-title">From the blog</h2><a class="btn btn-ghost" href="/blog/">All articles</a></div>
-      <ul class="post-grid">${posts.slice(0, 3).map((p) => postCard(p, 'h3')).join('')}</ul>
-    </div>
-  </section>`);
-}
 
 for (const s of content.services) {
   const path = `/${s.slug}/`;

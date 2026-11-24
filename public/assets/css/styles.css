@@ -828,7 +828,6 @@ html.viewer-open .progress, html.menu-open .progress { opacity: 0; }
 .post-cat { justify-self: start; padding: 5px 11px; border-radius: 999px; background: var(--haze); font-size: 13px; font-weight: 600; color: var(--cobalt); }
 .post-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 14px; color: var(--slate); }
 .post-meta span + span::before { content: "·"; margin-right: 14px; color: var(--mist); }
-.blog-teaser .sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 18px; }
 
 .post-hero .page-title { max-width: 22ch; font-size: clamp(38px, 5.6vw, 72px); line-height: 1; }
 .post-hero .post-meta { margin-top: 26px; font-size: 15px; }
