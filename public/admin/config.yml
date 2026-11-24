@@ -1,4 +1,4 @@
-# Decap CMS — lets the founders add and remove portfolio projects at /admin.
+# Decap CMS — lets the founders add and remove portfolio projects and blog articles at /admin.
 # Signing in uses GitHub (via Netlify's OAuth provider). Every save commits to
 # `main` in kelbari-agency/kelbari, which triggers a production deploy.
 
@@ -94,3 +94,36 @@ collections:
                   - { label: Width (px), name: width, widget: number, required: false, value_type: int }
                   - { label: Height (px), name: height, widget: number, required: false, value_type: int }
                 pattern: ["^https?://.+", "Start the address with https://"]
+
+  # Blog articles: one Markdown file per article in tools/content/blog/. The file name is the
+  # address: tools/content/blog/website-cost.md is published at kelbari.net/blog/website-cost/.
+  - name: blog
+    label: Blog
+    label_singular: article
+    folder: tools/content/blog
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    summary: "{{title}} ({{date}})"
+    sortable_fields: [date, title]
+    fields:
+      - { label: Title, name: title, widget: string, hint: "Up to about 60 characters. Becomes the page heading and the title in Google." }
+      - { label: Description, name: description, widget: text, hint: "One sentence of 140 to 160 characters. Shown under the title and in Google results." }
+      - { label: Published, name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: Updated, name: updated, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, required: false, hint: "Only when you make a real change to an older article." }
+      - { label: Author, name: author, widget: select, options: [Kelbari, Saqlain Akbar, Hafiz Ahmad], default: Kelbari }
+      - { label: Category, name: category, widget: select, options: [Web development, SaaS, Digital marketing, AI, Graphic design] }
+      - label: Related service
+        name: service
+        widget: select
+        hint: "The article is listed under Guides on this service page."
+        options:
+          - { label: Web development, value: web-development }
+          - { label: SaaS, value: saas }
+          - { label: Digital marketing, value: digital-marketing }
+          - { label: Graphic design, value: graphic-design }
+      - { label: Keywords, name: keywords, widget: list, required: false, hint: "The searches this article is written for, e.g. website cost in Pakistan" }
+      - { label: Draft, name: draft, widget: boolean, default: false, required: false, hint: "Drafts are saved but not published." }
+      - { label: Article, name: body, widget: markdown, hint: "Start with a short answer. Use Heading 2 for sections and Heading 3 inside them. Don't add the title again." }
