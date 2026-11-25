@@ -408,7 +408,7 @@ ${posts.map((p) => `<item><title>${esc(p.title)}</title><link>${SITE}${p.path}</
     ['Website', 'kelbari.net'],
     ['WhatsApp', '+92 301 9233246 (24/7)'],
     ['Email', 'kelbariofficial@gmail.com'],
-    ['Support', 'support@kelbari.net · support.kelbari@gmail.com'],
+    ['Support', 'support@kelbari.net'],
     ['LinkedIn', 'linkedin.com/company/kelbari'],
   ];
   const body = `
@@ -459,7 +459,7 @@ ${ctaBand()}`;
     '',
     '- Website: https://kelbari.net/',
     '- WhatsApp: +92 301 9233246 (support 24/7)',
-    '- Email: kelbariofficial@gmail.com (support: support@kelbari.net or support.kelbari@gmail.com)',
+    '- Email: kelbariofficial@gmail.com (support: support@kelbari.net)',
     '- Location: Bahawalpur, Punjab, Pakistan',
     '- Founders: Saqlain Akbar, Hafiz Ahmad',
     '- LinkedIn: https://www.linkedin.com/company/kelbari/',
