@@ -389,6 +389,31 @@
       .catch(() => { /* keep the "coming soon" state */ });
   })();
 
+  /* ---------- Articles: a Copy button on every code block (used for copy-and-paste prompts) ---------- */
+  $$('.article pre').forEach((pre) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copy-btn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy this prompt');
+    btn.addEventListener('click', async () => {
+      const code = pre.querySelector('code') || pre;
+      let ok = false;
+      try {
+        await navigator.clipboard.writeText(code.innerText);
+        ok = true;
+      } catch (e) {
+        ok = false;
+      }
+      btn.textContent = ok ? 'Copied' : 'Select the text to copy';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    });
+    const wrap = document.createElement('div');
+    wrap.className = 'code-wrap';
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.append(btn, pre);
+  });
+
   /* ---------- Contact form: open WhatsApp or the mail app with the brief pre-filled ---------- */
   (() => {
     const form = $('[data-brief-form]');
