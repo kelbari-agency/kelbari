@@ -36,7 +36,7 @@ Page count is a poor measure. A better one is how many *different kinds* of page
 | Online store | Sell products with delivery | Catalogue size, variants, payment methods, delivery rules, stock and order handling |
 | Custom web app or portal | Logins, dashboards, live data | Every feature is built and tested; closer to software than to a website |
 
-For example, the [Q ILM Institute](https://qilminstitute.com) site we built looks like a normal marketing site, but its free-trial booking detects the visitor's time zone and it has separate pages for UK, US and Gulf time zones. If your project is closer to the last row, it is priced and planned more like software than a website. Our guide on [how to build a SaaS product](/blog/how-to-build-a-saas-product/) and our [SaaS service page](/saas/) explain that kind of work.
+For example, the [QILM Institute](https://qilminstitute.com) site we built looks like a normal marketing site, but its free-trial booking detects the visitor's time zone and it has separate pages for UK, US and Gulf time zones. If your project is closer to the last row, it is priced and planned more like software than a website. Our guide on [how to build a SaaS product](/blog/how-to-build-a-saas-product/) and our [SaaS service page](/saas/) explain that kind of work.
 
 ## What drives website development charges
 
