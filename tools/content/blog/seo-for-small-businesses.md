@@ -32,7 +32,7 @@ Local searches follow different rules. Google's guide to [local ranking](https:/
 
 A national chain can't be close to everyone. A well-run local business with a complete profile and steady reviews can outrank much bigger names for searches in its own area.
 
-We built the [Q ILM Institute](https://qilminstitute.com) website with separate pages for UK, US and Gulf time zones. Someone in Dubai looking for Quran classes at a time that suits them lands on a page written for them, not a generic course list. That is the long-tail idea applied to page structure.
+We built the [QILM Institute](https://qilminstitute.com) website with separate pages for UK, US and Gulf time zones. Someone in Dubai looking for Quran classes at a time that suits them lands on a page written for them, not a generic course list. That is the long-tail idea applied to page structure.
 
 ## SEO for small businesses: the checklist
 
